@@ -108,3 +108,4 @@ def get_minimap(lat_lng_list: Optional[List[Tuple[float, float]]] = None,
     html = get_minimap_func(lat_lng_list, postcode_list)
     return html
 
+

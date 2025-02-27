@@ -45,4 +45,4 @@ def df_to_markdown(df, bold_header=False):
         escaped_row = [str(cell).replace("\n", "<br>").replace("|", "\\|") for cell in row]
         markdown_str += " | ".join(escaped_row) + " \n"
 
-    return markdown_str+"\n"
+    return "\n"+markdown_str+"\n"
