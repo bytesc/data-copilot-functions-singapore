@@ -1,9 +1,8 @@
 import pandas as pd
 import sqlalchemy
-from typing import List, Tuple, Optional
 
-from .utils.get_config import config_data
-from .utils.llm_access.LLM import get_llm
+from agent.utils.get_config import config_data
+from agent.utils.llm_access.LLM import get_llm
 
 DATABASE_URL = config_data['mysql']
 engine = sqlalchemy.create_engine(DATABASE_URL)

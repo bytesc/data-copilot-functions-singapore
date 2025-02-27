@@ -2,17 +2,16 @@ import pandas as pd
 
 from .tools.tools_def import engine, llm
 
-from .tools.copilot.python_code import get_py_code, get_py_code_with_data
-from .tools.copilot.utils.code_executor import execute_py_code, execute_py_code_with_data
+from .tools.copilot.python_code import get_py_code
+from .tools.copilot.utils.code_executor import execute_py_code
 from .tools.copilot.sql_code import get_db_info_prompt
 
-from .tools.utils.code_insert import insert_yield_statements, insert_lines_into_function
+from .utils.code_insert import insert_lines_into_function
 from .tools.get_function_info import get_function_info
 
 from .ans_review import get_ans_review
-from .tools.utils.final_output_parse import is_url, wrap_url_with_markdown_image, df_to_markdown
-from .tools.utils.final_output_parse import wrap_png_url_with_markdown_image,is_png_url
-from .tools.rag.rag import rag_from_policy_func
+from .utils.final_output_parse import df_to_markdown
+from .utils.final_output_parse import wrap_png_url_with_markdown_image,is_png_url
 
 IMPORTANT_MODULE = ["import pandas as pd", "import math", "import numpy as np"]
 
