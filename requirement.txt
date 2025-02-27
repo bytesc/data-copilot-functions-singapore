@@ -1,0 +1,12 @@
+fastapi==0.103.2
+pyjwt==2.10.1
+pydantic==2.10.5
+SQLAlchemy==2.0.36
+PyMySQL==1.1.0
+
+
+openai==1.63.0
+
+pandas==2.2.2
+Pillow==9.4.0
+matplotlib==3.8.3

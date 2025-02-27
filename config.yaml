@@ -1,0 +1,6 @@
+# config
+server_port: 8009
+server_host: "0.0.0.0"
+mysql: "mysql+pymysql://root:123456@localhost:3306/singapore_land"
+
+static_path: "http://127.0.0.1:8009/"
