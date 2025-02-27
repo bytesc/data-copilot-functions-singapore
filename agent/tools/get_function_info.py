@@ -1,10 +1,12 @@
 
 from .tools_def import draw_graph, query_database
+from .tools_def import get_minimap
 from .copilot.utils.call_llm_test import call_llm
 
 FUNCTION_DICT = {
     "query_database": query_database,
     "draw_graph": draw_graph,
+    "get_minimap": get_minimap
 }
 ASSIST_FUNCTION_DICT = {
 

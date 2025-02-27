@@ -12,12 +12,14 @@ from .tools.get_function_info import get_function_info
 from .ans_review import get_ans_review
 from .tools.utils.final_output_parse import is_url, wrap_url_with_markdown_image, df_to_markdown
 from .tools.utils.final_output_parse import wrap_png_url_with_markdown_image,is_png_url
+from .tools.rag.rag import rag_from_policy_func
 
 IMPORTANT_MODULE = ["import pandas as pd", "import math", "import numpy as np"]
 
 
 def get_cot_prompt(question):
     data_prompt = get_db_info_prompt(engine, simple=True)
+    # rag_ans = rag_from_policy_func(question,llm,engine)
     rag_ans = ""
     # print(rag_ans)
 
@@ -33,6 +35,7 @@ def get_cot_prompt(question):
 Please use the following functions to solve the problem.
 Please yield explanation string of each step as kind of report!
 Please yield some information string during the function!
+Please yield the result of each step and function call!
 Please yield report many times during the function!!! not only yield at last! 
 None or empty DataFrame return handling for each function call is extremely important.
 """
@@ -100,6 +103,7 @@ def cot_agent(question, retries=2, print_rows=10):
                             cot_ans += "\n" + wrap_png_url_with_markdown_image(item) + "\n"
                         else:
                             cot_ans += "\n" + str(item) + "\n"
+                        print(item)
 
                     ans = "### Base knowledge: \n" + rag_ans + "\n\n"
                     ans += "### COT Result: \n" + cot_ans + "\n"

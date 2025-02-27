@@ -4,3 +4,6 @@ __pycache__/
 *.pem
 api_key_openai.txt
 tmp_imgs/*.png
+
+onemap_password.txt
+onemap_email.txt

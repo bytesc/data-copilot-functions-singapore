@@ -14,20 +14,16 @@ def wrap_url_with_markdown_image(url):
 
 
 def is_png_url(s):
-    # 修改正则表达式，使其可以匹配字符串中包含的URL，且URL以.png结尾
     url_regex = re.compile(
-        r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\$\$,]|(?:%[0-9a-fA-F][0-9a-fA-F]))+\.png'
+        r'http[s]?://[^"]+\.(?:png)'
     )
-    # 使用findall来查找所有匹配的URL
     return len(re.findall(url_regex, s)) > 0
 
 
 def wrap_png_url_with_markdown_image(s):
-    # 使用正则表达式找到所有匹配的URL
     url_regex = re.compile(
-        r'(http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\$\$,]|(?:%[0-9a-fA-F][0-9a-fA-F]))+\.png)'
+        r'(http[s]?://[^"]+\.(?:png))'
     )
-    # 替换找到的每个URL为Markdown格式的图片链接
     return re.sub(url_regex, r"![image](\1)", s)
 
 import pandas as pd
