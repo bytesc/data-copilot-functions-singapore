@@ -10,3 +10,4 @@ openai==1.63.0
 pandas==2.2.2
 Pillow==9.4.0
 matplotlib==3.8.3
+pygwalker==0.4.9.13
