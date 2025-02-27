@@ -26,7 +26,20 @@ def wrap_png_url_with_markdown_image(s):
     )
     return re.sub(url_regex, r"![image](\1)", s)
 
-import pandas as pd
+
+def wrap_html_url_with_markdown_link(s):
+    url_regex = re.compile(
+        r'(http[s]?://[^"]+\.(?:html))'
+    )
+    return re.sub(url_regex, r"[Data](\1)", s)+"\n"
+
+
+def wrap_html_url_with_html_a(s):
+    url_regex = re.compile(
+        r'(http[s]?://[^"]+\.(?:html))'
+    )
+    return re.sub(url_regex, r'<a href="\1" target="_blank">Data</a>', s)+"\n"
+
 
 
 def df_to_markdown(df, bold_header=False):

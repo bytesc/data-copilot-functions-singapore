@@ -1,11 +1,14 @@
+import mimetypes
+
 import sqlalchemy
 import uvicorn
 import os
 from fastapi import FastAPI, Request
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, HTMLResponse, Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from starlette.responses import JSONResponse
+
 
 from utils.get_config import config_data
 
@@ -21,9 +24,17 @@ STATIC_PATH = f"/{STATIC_FOLDER}"
 # http://127.0.0.1:8003/tmp_imgs/mlkjcvep.png
 @app.get(f"/{STATIC_FOLDER}/{{filename}}")
 async def read_static_file(request: Request, filename: str):
-    file_path = os.path.join(STATIC_FOLDER, filename)
-    if os.path.isfile(file_path):
-        return FileResponse(path=file_path, media_type="application/octet-stream", filename=filename)
+    filepath = os.path.join(STATIC_FOLDER, filename)
+    if os.path.isfile(filepath):
+        # 猜测文件的MIME类型
+        content_type, _ = mimetypes.guess_type(filepath)
+        if content_type is None:
+            content_type = "application/octet-stream"  # 默认为二进制流，如果无法确定类型
+        # 读取文件内容
+        with open(filepath, "rb") as file:
+            file_content = file.read()
+        # 返回Response对象，文件内容作为字节流发送
+        return Response(content=file_content, media_type=content_type)
     else:
         return {"error": "File not found"}
 

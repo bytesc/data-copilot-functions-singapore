@@ -10,8 +10,9 @@ from .utils.code_insert import insert_lines_into_function
 from .tools.get_function_info import get_function_info
 
 from .ans_review import get_ans_review
-from .utils.final_output_parse import df_to_markdown
+from .utils.final_output_parse import df_to_markdown, wrap_html_url_with_markdown_link, wrap_html_url_with_html_a
 from .utils.final_output_parse import wrap_png_url_with_markdown_image,is_png_url
+from .utils.pd_to_walker import pd_to_walker
 
 IMPORTANT_MODULE = ["import pandas as pd", "import math", "import numpy as np"]
 
@@ -97,6 +98,9 @@ def cot_agent(question, retries=2, print_rows=10):
                                            "\nfirst {} rows of {}\n".format(print_rows, len(item))
                             else:
                                 cot_ans += df_to_markdown(item)
+                            html_link = pd_to_walker(item)
+                            # cot_ans += wrap_html_url_with_markdown_link(html_link)
+                            cot_ans += wrap_html_url_with_html_a(html_link)
                         elif isinstance(item, str) and is_png_url(item):
                             cot_ans += "\n" + wrap_png_url_with_markdown_image(item) + "\n"
                         else:
