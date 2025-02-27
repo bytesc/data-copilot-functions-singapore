@@ -8,7 +8,7 @@ from pywebio import start_server
 
 def ai_agent_api(question: str, url="http://127.0.0.1:"+str(config_data["server_port"])+"/ask-agent/"):
     # 使用 httpx 发送请求到另一个服务器的 /ask-agent/ 接口
-    with httpx.Client(timeout=300.0) as client:
+    with httpx.Client(timeout=180.0) as client:
         try:
             response = client.post(url, json={"question": question})
             # 检查响应状态码

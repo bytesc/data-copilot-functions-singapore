@@ -26,7 +26,7 @@ def get_cot_prompt(question):
     question += "\nBase knowledge: \n" + rag_ans + "\n"
     question += "\nThe database content: \n" + data_prompt + "\n"
 
-    function_info = get_function_info(question, llm)
+    function_info, function_import = get_function_info(question, llm)
     # print(function_info)
     if function_info == "solved":
         return "solved", rag_ans
@@ -48,13 +48,11 @@ Here is an example:
 def func():
     import pandas as pd
     import math
-    # keep these import statements and add what you need after them
-    from agent.tools.tools_def import query_database, predict_grade_for_class
     # generate code to perform operations here
                 
-    # yield some information and explanation
-    yield "某班级的成绩如下："  
-    df = query_database("某班级的成绩", "姓名, 课程名, 成绩")      
+    yield "某班级的成绩如下："  # yield some information and explanation
+    df = query_database("某班级的成绩", "姓名, 课程名, 成绩")   
+    yield df  # the result of each step and function call
     # None or empty DataFrame return handling for each function call.
     if df == None:
         yield "数据库里没找到这个班级的成绩"
@@ -67,13 +65,13 @@ def func():
     cot_prompt = "question:" + question + pre_prompt + \
                  function_prompt + str(function_info) + \
                  example_code
-    return cot_prompt, rag_ans
+    return cot_prompt, rag_ans, function_import
 
 
 def cot_agent(question, retries=2, print_rows=10):
     exp = None
     for i in range(3):
-        cot_prompt, rag_ans = get_cot_prompt(question)
+        cot_prompt, rag_ans, function_import = get_cot_prompt(question)
         print(rag_ans)
         # print(cot_prompt)
         if cot_prompt == "solved":
@@ -84,6 +82,7 @@ def cot_agent(question, retries=2, print_rows=10):
                 code = get_py_code(cot_prompt + err_msg, llm)
                 # print(code)
                 # code = insert_yield_statements(code)
+                code = insert_lines_into_function(code, function_import)
                 code = insert_lines_into_function(code, IMPORTANT_MODULE)
                 print(code)
                 if code is None:

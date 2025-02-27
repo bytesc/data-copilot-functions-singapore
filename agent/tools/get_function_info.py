@@ -1,15 +1,22 @@
-
-from .tools_def import draw_graph, query_database
-from .tools_def import get_minimap
 from .copilot.utils.call_llm_test import call_llm
+from .tools_def import draw_graph, query_database
+from .custom_tools_def import get_minimap
+
 
 FUNCTION_DICT = {
     "query_database": query_database,
     "draw_graph": draw_graph,
     "get_minimap": get_minimap
 }
-ASSIST_FUNCTION_DICT = {
 
+FUNCTION_IMPORT = {
+    query_database: "from agent.tools.tools_def import query_database",
+    draw_graph: "from agent.tools.tools_def import draw_graph",
+    get_minimap: "from agent.tools.custom_tools_def import get_minimap"
+}
+
+ASSIST_FUNCTION_DICT = {
+    # predict_grade_for_stu: [from_username_to_uid, from_lesson_name_to_lesson_num],
 }
 
 IMPORTANT_FUNC = ["query_database"]
@@ -50,7 +57,7 @@ def get_function_info(question, llm):
     function_prompt = get_function_prompt(question)
     function_list_str = call_llm(function_prompt, llm).content
     if function_list_str == "solved":
-        return "solved"
+        return "solved",[]
     function_list = [part.strip() for part in function_list_str.split(',')]
     for f in IMPORTANT_FUNC:
         if f not in function_list:
@@ -66,6 +73,10 @@ def get_function_info(question, llm):
                 for assist_function in assist_functions:
                     function_set.add(assist_function)
     function_info = ""
+    function_import = []
     for function in function_set:
         function_info += "\n" + str(function.__doc__) + "\n"
-    return function_info
+        import_list = FUNCTION_IMPORT.get(function)
+        if import_list:
+            function_import.append(import_list)
+    return function_info, function_import
