@@ -155,6 +155,84 @@ python ./main.py
 python ./front.py
 ```
 
+### 自定义 function call
+
+在 `agent/tools/custom_tools_def.py` 中定义自定义函数
+
+需要写规范、详细的注释，前三行是函数基本功能信息，之后是详细信息
+
+例子：
+
+```python
+from typing import List, Tuple, Optional
+from .map.get_onemap_minimap import get_minimap_func
+
+def get_minimap(lat_lng_list: Optional[List[Tuple[float, float]]] = None,
+                postcode_list: Optional[List[str]] = None) -> str:
+    """
+    get_minimap(lat_lng_list: Optional[List[Tuple[float, float]]] = None, postcode_list: Optional[List[str]] = None) -> str:
+    Generate an HTML iframe for a minimap with optional markers in latitude and longitude pairs or or postal codes.
+    Returns an HTML iframe string.
+
+    The function creates an HTML iframe that embeds a minimap from OneMap.sg.
+    Users can specify a list of latitude and longitude pairs or postal codes
+    to be marked on the map.
+
+    Args:
+    - lat_lng_list (Optional[List[Tuple[float, float]]]): A list of tuples,
+      where each tuple contains a latitude and longitude pair for a marker.
+      Default is None.
+    - postcode_list (Optional[List[str]]): A list of postal codes to be marked
+      on the map. Default is None.
+
+    Returns:
+    - str: An HTML iframe string that can be embedded in a webpage to display
+      the minimap with the specified markers.
+
+    Example usage:
+    ```python
+    get_minimap_func(lat_lng_list=[(1.2996492424497, 103.8447478575), (1.29963489170907, 103.845842317726)])
+    get_minimap_func(postcode_list=["123456"])
+    ```
+
+    """
+    html = get_minimap_func(lat_lng_list, postcode_list)
+    return html
+```
+
+然后在 `agent/tools/get_function_info.py` 中注册函数
+
+import 函数之后，在 `FUNCTION_DICT` 中添加函数，在 `FUNCTION_IMPORT ` 中添加 import 语句
+
+例如：
+
+```python
+from .custom_tools_def import get_minimap  # 导入
+
+
+FUNCTION_DICT = {
+    "query_database": query_database,
+    "draw_graph": draw_graph,
+    "get_minimap": get_minimap   # 注册
+}
+
+FUNCTION_IMPORT = {
+    query_database: "from agent.tools.tools_def import query_database",
+    draw_graph: "from agent.tools.tools_def import draw_graph",
+    get_minimap: "from agent.tools.custom_tools_def import get_minimap"  # 添加 import
+}
+```
+
+`ASSIST_FUNCTION_DICT` 定义了函数的依赖关系图。
+
+例如：
+
+```python
+ASSIST_FUNCTION_DICT = {
+    # predict_grade_for_stu: [from_username_to_uid, from_lesson_name_to_lesson_num],
+}
+```
+
 # 开源许可证
 
 此翻译版本仅供参考，以 LICENSE 文件中的英文版本为准
