@@ -116,7 +116,7 @@ def get_table_creation_statements(engine, tables, simple=False):
                 if column['default'] is not None:
                     column_def += f" DEFAULT {column['default']}"
             else:
-                column_def = f"    {column['name']}"
+                column_def = f"    {column['name']} {column['type']}"
             # # 添加列的注释
             # if 'comment' in column and column['comment']:
             #     column_def += f" COMMENT '{column['comment']}'"
