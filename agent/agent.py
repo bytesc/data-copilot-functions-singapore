@@ -23,8 +23,8 @@ def get_cot_prompt(question):
     rag_ans = ""
     # print(rag_ans)
 
-    question += "\nBase knowledge: \n" + rag_ans + "\n"
-    question += "\nThe database content: \n" + data_prompt + "\n"
+    knowledge = "\nBase knowledge: \n" + rag_ans + "\n"
+    database = "\nThe database content: \n" + data_prompt + "\n"
 
     function_info, function_import = get_function_info(question, llm)
     # print(function_info)
@@ -64,7 +64,7 @@ def func():
         yield path
 ```
 """
-    cot_prompt = "question:" + question + pre_prompt + \
+    cot_prompt = "question:" + question + knowledge + database + pre_prompt + \
                  function_prompt + str(function_info) + \
                  example_code
     return cot_prompt, rag_ans, function_import
