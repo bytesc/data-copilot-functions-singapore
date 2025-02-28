@@ -66,6 +66,10 @@ Pywebio 交互式前端网页，不必须 openai api，100%纯 Python 代码。
 
 ![](./readme_static/r3.png)
 
+用户提供信息不足以完成任务时，反问用户使其补充信息(Result Review)
+
+![](./readme_static/r4.png)
+
 ### 原理
 
 函数调用链(Function Call Chain)和智能体函数(Agent as Function)，实现多智能体协同原理示例
