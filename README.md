@@ -44,7 +44,7 @@ Pywebio 交互式前端网页，不必须 openai api，100%纯 Python 代码。
 ![](./readme_static/流程图.png)
 
 基本流程：
-1. **Qusetion**: 用户自然语言问题提问
+1. **Question**: 用户自然语言问题提问
 2. **RAG**: 通过检索增强生成(RAG)获取背景知识
 3. **Function Selection**: LLM 根据函数基本信息选择多个函数，通过函数依赖图(Function Graph)获得可用函数列表和详细注释（函数包括非智能体函数(Custum Function)和调用其它智能体的函数(Agent as Function)，实现多智能体协同）
 4. **Function Calls Chain**: LLM 根据函数列表和详细注释，生成调用多个函数的 python 代码并执行
