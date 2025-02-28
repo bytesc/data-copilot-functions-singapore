@@ -52,6 +52,22 @@ Pywebio 交互式前端网页，不必须 openai api，100%纯 Python 代码。
 
 ## 展示
 
+### 演示
+
+智能数据库查询、统计计算和绘图(Agent 协同)
+
+![](./readme_static/r1.png)
+
+地图标注(自定义function call)
+
+![](./readme_static/r2.png)
+
+智能绘图不满意，可以交互式绘图
+
+![](./readme_static/r3.png)
+
+### 原理
+
 函数调用链(Function Call Chain)和智能体函数(Agent as Function)，实现多智能体协同原理示例
 
 ![](./readme_static/f1.png)

@@ -72,10 +72,12 @@ that performs the following operations:
 """
 
     end_prompt = """
-All code should be completed in a single markdown code block without any comments, explanations or cmds.
-The function should not be called, do not print anything in the function.
-Please import the module you need, modules must be imported inside the function.
-Do not mock any data !!! Do not make any example input like real data!!!
+Remind:
+1. All code should be completed in a single markdown code block without any comments, explanations or cmds.
+2. The function should not be called, do not print anything in the function.
+3. Please import the module you need, modules must be imported inside the function.
+4. Do not mock any data !!! Do not make any example input like real data!!!
+5. Do not assign any example input or default value for user to replace with actual data!!!
 """
 
     final_prompt = pre_prompt + question + "\n" + end_prompt

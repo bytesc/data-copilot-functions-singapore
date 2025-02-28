@@ -46,7 +46,9 @@ Please write SQL code to select the data needed according to the following requi
             data_prompt += str(df_cols) + "\n"
 
         end_prompt = """
-All code should be completed in a single markdown code block without any comments, explanations or cmds.
+Remind:
+1. All code should be completed in a single markdown code block without any comments, explanations or cmds.
+2. Do not assign any example input or default value for user to replace with actual data!!!
 """
         final_prompt = question + pre_prompt + "\n" + data_prompt + end_prompt
 
