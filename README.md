@@ -41,7 +41,10 @@ Pywebio 交互式前端网页，不必须 openai api，100%纯 Python 代码。
 
 基本程序流水线图：
 
-![](./readme_static/流程图.png)
+![](./readme_static/流程图1.png)
+
+![](./readme_static/流程图2.png)
+
 
 基本流程：
 1. **Question**: 用户自然语言问题提问
