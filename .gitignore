@@ -8,3 +8,5 @@ tmp_imgs/*.html
 
 onemap_password.txt
 onemap_email.txt
+
+*.sqlite3
