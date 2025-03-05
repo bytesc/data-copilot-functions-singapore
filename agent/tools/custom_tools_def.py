@@ -1,5 +1,13 @@
+import json
 from typing import List, Tuple, Optional
+
+import pandas as pd
+from agent.utils.llm_access.LLM import get_llm
+
+llm = get_llm()
+
 from .map.get_onemap_minimap import get_minimap_func
+from .map.utils.api_call import get_api_result_func
 
 
 def get_minimap(lat_lng_list: Optional[List[Tuple[float, float]]] = None,
@@ -33,3 +41,25 @@ def get_minimap(lat_lng_list: Optional[List[Tuple[float, float]]] = None,
     """
     html = get_minimap_func(lat_lng_list, postcode_list)
     return html
+
+
+def get_api_result(url: str) -> dict | list:
+    """
+    get_api_result(url: str) -> dict | list:
+    Get data from API (This API provides population data sets by the Department of Statistics. The types of population demographics data, based on planning area or subzone, include age group, economic status, education status, household size etc.) with Relative URL string
+    Returns a JSON dict or list of the request result
+
+    Args:
+    - url (string): the Relative URL of the request, use Relative URL not Full URL !!!
+
+    Returns:
+    - dict | list: the JSON result of the request
+
+    Example usage:
+    ```python
+    # use Relative URL not Full URL !!!
+    get_api_result("/api/public/popapi/getEconomicStatus?planningArea=Bedok&year=2010&gender=male")
+    ```
+    """
+    result = get_api_result_func(url)
+    return result
