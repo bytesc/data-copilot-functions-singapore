@@ -21,7 +21,7 @@ ASSIST_FUNCTION_DICT = {
     # predict_grade_for_stu: [from_username_to_uid, from_lesson_name_to_lesson_num],
 }
 
-IMPORTANT_FUNC = ["query_database", ]
+IMPORTANT_FUNC = ["query_database", "get_api_result"]
 
 # FUNCTION_INFO = {key: func.__doc__ for key, func in FUNCTION_DICT.items()}
 # ASSIST_FUNCTION_INFO = {key: ' '.join(func.__doc__ for func in funcs) for key, funcs in ASSIST_FUNCTION_DICT.items()}

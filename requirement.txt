@@ -11,3 +11,5 @@ pandas==2.2.2
 Pillow==9.4.0
 matplotlib==3.8.3
 pygwalker==0.4.9.13
+Django=5.0.4
+django-simpleui==2024.11.15

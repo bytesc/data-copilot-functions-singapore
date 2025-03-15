@@ -1,7 +1,7 @@
 import httpx
 from utils.get_config import config_data
 
-from pywebio.input import input, TEXT
+from pywebio.input import input, TEXT, textarea
 from pywebio.output import put_text, put_html, put_markdown, clear, put_loading
 from pywebio import start_server
 
@@ -26,7 +26,7 @@ def ai_agent_api(question: str, url="http://127.0.0.1:"+str(config_data["server_
 def main():
     while 1:
         # put_text("Ask your question to the AI Agent:")
-        question = input("Enter your question here:", type=TEXT)
+        question = textarea("Enter your question here:", type=TEXT, rows=2)
         put_markdown("## "+question)
 
         with put_loading():
@@ -42,4 +42,4 @@ def main():
 
 # 启动 PyWebIO 应用
 if __name__ == '__main__':
-    start_server(main, port=8080)
+    start_server(main, port=8010)
