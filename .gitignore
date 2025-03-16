@@ -10,3 +10,5 @@ onemap_password.txt
 onemap_email.txt
 
 *.sqlite3
+
+cot_agent_log.txt

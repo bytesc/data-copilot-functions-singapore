@@ -1,3 +1,5 @@
+import logging
+
 import pandas as pd
 
 from .tools.tools_def import engine, llm
@@ -19,6 +21,8 @@ from .tools.custom_tools_def import get_api_result
 
 IMPORTANT_MODULE = ["import pandas as pd", "import math", "import numpy as np"]
 
+logging.basicConfig(filename='./cot_agent_log.txt', level=logging.INFO,
+                    format='%(asctime)s - %(message)s')
 
 def get_cot_prompt(question):
     data_prompt = get_db_info_prompt(engine, simple=True)
@@ -128,6 +132,9 @@ def cot_agent(question, retries=2, print_rows=10):
                     # print(ans)
                     review_ans = get_ans_review(question, ans, code)
                     ans += "## Summarize and review: \n" + review_ans + "\n"
+
+                    logging.info(f"Question: {question}\nAnswer: {ans}\nCode: {code}\n")
+
                     return ans
                 except Exception as e:
                     err_msg = str(e) + "\n```python\n" + code + "\n```\n"
