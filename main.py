@@ -13,6 +13,7 @@ from starlette.responses import JSONResponse
 from utils.get_config import config_data
 
 from agent.agent import cot_agent
+from agent.summary import get_ans_summary
 
 # DATABASE_URL = config_data['mysql']
 # engine = sqlalchemy.create_engine(DATABASE_URL)
@@ -46,6 +47,27 @@ class AgentInput(BaseModel):
 @app.post("/ask-agent/")
 async def ask_agent(request: Request, user_input: AgentInput):
     ans = cot_agent(user_input.question)
+    print(ans)
+    if ans:
+        processed_data = {
+            "question": user_input.question,
+            "ans": ans,
+            "type": "success",
+            "msg": "处理成功"
+        }
+    else:
+        processed_data = {
+            "question": user_input.question,
+            "ans": "",
+            "type": "error",
+            "msg": "处理失败，请换个问法吧"
+        }
+    return JSONResponse(content=processed_data)
+
+
+@app.post("/agent-summary/")
+async def agent_summary(request: Request, user_input: AgentInput):
+    ans = get_ans_summary(user_input.question)
     print(ans)
     if ans:
         processed_data = {
