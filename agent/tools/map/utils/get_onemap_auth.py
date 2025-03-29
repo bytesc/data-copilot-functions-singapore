@@ -20,7 +20,6 @@ print(payload)
 response = requests.request("POST", url, json=payload)
 print(response.text)
 
-AUTH = ""
-# AUTH = json.loads(response.text)["access_token"]
+AUTH = json.loads(response.text)["access_token"]
 print(AUTH)
 

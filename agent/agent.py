@@ -69,15 +69,15 @@ def func():
     # generate code to perform operations here
     # Do not assign any example input or default value for user to replace with actual data!!! use None instead
     
-    yield "某班级的成绩如下："  # yield some information and explanation
-    df = query_database("某班级的成绩", "姓名, 课程名, 成绩")   
+    yield "A certain class’s grades are as follows:"  # yield some information and explanation
+    df = query_database("The grades of a certain class", "Name, Course_name, Grade")   
     yield df  # the result of each step and function call
     # None or empty DataFrame return handling for each function call.
     if df == None:
-        yield "数据库里没找到这个班级的成绩"
+        yield "The grades for this class were not found in the database"
     else:
-        yield "成绩柱状图如下："
-        path = draw_graph("画柱状图", df)
+        yield "The grade histogram is as follows:"
+        path = draw_graph("Draw a bar chart", df)
         yield path
 ```
 """
