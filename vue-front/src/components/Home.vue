@@ -141,7 +141,7 @@ import {requestPack} from "../utils/requests.js";
 import {Box, ChatDotRound, CloseBold, Coin, Files, House, Plus, Refrigerator, Tickets} from "@element-plus/icons-vue";
 const getTableData = async ()=>{
   // let res= await request.get(`user/list/?pageSize=${pageSize.value}&pageNum=${cur}`)
-  let res= await requestPack.get(`/mydbms/index?statement=${SqlStatement.content}`)
+  let res= await requestPack.post(`/mydbms/index?statement=${SqlStatement.content}`)
   console.log(res)
   tableData.value = res.msg
   console.log(res.msg)
@@ -167,7 +167,7 @@ const getTableData = async ()=>{
           text-color="#fff"
           active-text-color="#ffd04b"
       >
-        <el-menu-item index="1"><h1><strong>MiniDBMS</strong></h1></el-menu-item>
+        <el-menu-item index="1"><h1><strong>Data Copilot</strong></h1></el-menu-item>
         <div class="flex-grow" />
       </el-menu>
     </el-header>
@@ -177,59 +177,7 @@ const getTableData = async ()=>{
         <el-row :gutter="20">
           <el-col :xs="24" :sm="24" :md="14" :lg="16" :xl="16"
           >
-            <el-button type="success" @click="onLook"><el-icon><Coin /></el-icon>数据库</el-button>
-            <el-button @click="handleDbRowOp(CurDatabaseName)"
-                       v-if="CurDatabaseName!==''">
-              <el-icon><Files /></el-icon>{{ CurDatabaseName }}</el-button>
-            <el-button  @click="handleTableRowOp(CurTableName)"
-                        v-if="CurTableName!==''">
-              <el-icon><Tickets /></el-icon>{{ CurTableName }}</el-button>
-            <el-button type="success" @click="handleTableRowAdd"
-                       v-if="SqlStatement.content.match('select') && CurTableName!==''"
-            ><el-icon><Plus /></el-icon> 添加</el-button>
 
-            <el-table stripe :data="tableData" max-height="400">
-              <el-table-column fixed="left" label="" width="60"
-                               v-if="SqlStatement.content==='show databases;'">
-                <template #default="scope">
-                  <el-button link type="primary" size="small"
-                             @click="handleDbRowOp(scope.row.databaseName)"
-                  >选择</el-button
-                  >
-                </template>
-              </el-table-column>
-
-              <el-table-column fixed="left" label="" width="60"
-                               v-if="SqlStatement.content.match('show tables;') && CurDatabaseName!==''">
-                <template #default="scope">
-                  <el-button link type="primary" size="small"
-                             @click="handleTableRowOp(scope.row.tableName)"
-                  >查看</el-button
-                  >
-                </template>
-              </el-table-column>
-
-              <el-table-column
-                  v-for="key in columns"
-                  :prop="key"
-                  :label="key"
-                  sortable
-              ></el-table-column>
-
-              <el-table-column fixed="right" label="" width="120"
-                               v-if="SqlStatement.content.match('select') && CurTableName!==''">
-                <template #default="scope">
-                  <el-button link type="danger" size="small"
-                             @click="handleTableRowDel(scope.row)"
-                  >删除</el-button
-                  >
-                  <el-button link type="primary" size="small"
-                             @click="handleTableRowAlt(scope.row)"
-                  >修改</el-button
-                  >
-                </template>
-              </el-table-column>
-            </el-table>
 
           </el-col>
 
@@ -237,14 +185,14 @@ const getTableData = async ()=>{
           >
 
             <el-form :model="SqlStatement" label-width="120px" label-position="top">
-              <el-form-item label="SQL 语句">
-                <el-input v-model="SqlStatement.content" type="textarea" :rows="12"/>
+              <el-form-item label="Question">
+                <el-input v-model="SqlStatement.content" type="textarea" :rows="6"/>
               </el-form-item>
               <el-form-item>
-                <el-button type="success" @click="onHelp"><el-icon><ChatDotRound /></el-icon>帮助</el-button>
+                <el-button type="success" @click="onHelp"><el-icon><ChatDotRound /></el-icon>Help</el-button>
                 <div style="flex-grow: 1;"/>
-                <el-button type="primary" @click="onSubmit"><el-icon><Select /> </el-icon> 提交</el-button>
-                <el-button @click="onClear"><el-icon><CloseBold /></el-icon> 清空</el-button>
+                <el-button type="primary" @click="onSubmit"><el-icon><Select /> </el-icon> Submit</el-button>
+                <el-button @click="onClear"><el-icon><CloseBold /></el-icon> Clear</el-button>
               </el-form-item>
             </el-form>
 
@@ -260,7 +208,7 @@ const getTableData = async ()=>{
           <el-col :span="4" class="foot-bottom"><div class="grid-content ep-bg-purple" ></div></el-col>
           <el-col :span="16" class="foot-bottom"><div class="grid-content ep-bg-purple" >
             <a href="http://www.bytesc.top" >
-<!--              style="text-decoration: none;-->
+              <!--              style="text-decoration: none;-->
               <p style="text-align: center; color: #888888"><strong>© 2024 Copyright: bytesc</strong></p>
             </a>
           </div></el-col>
@@ -278,11 +226,11 @@ const getTableData = async ()=>{
       width="30%"
       align-center
   >
-      <el-form label-width="100px" :model="SubmitData" label-position="left" style="max-width: 600px">
-        <el-form-item v-for="(value, key) in SubmitData" :key="key" :label="key">
-          <el-input v-model="SubmitData[key]" />
-        </el-form-item>
-      </el-form>
+    <el-form label-width="100px" :model="SubmitData" label-position="left" style="max-width: 600px">
+      <el-form-item v-for="(value, key) in SubmitData" :key="key" :label="key">
+        <el-input v-model="SubmitData[key]" />
+      </el-form-item>
+    </el-form>
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="addDialogVisible = false">取消</el-button>

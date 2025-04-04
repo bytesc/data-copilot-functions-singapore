@@ -1,5 +1,6 @@
 <script setup>
-import Sql from './components/Sql.vue'
+
+import Home from "./components/Home.vue";
 </script>
 
 <template>
@@ -11,7 +12,7 @@ import Sql from './components/Sql.vue'
 <!--      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />-->
 <!--    </a>-->
 <!--  </div>-->
-  <Sql msg="Vite + Vue" />
+  <Home msg="Vite + Vue" />
 </template>
 
 <style scoped>

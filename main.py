@@ -44,7 +44,7 @@ class AgentInput(BaseModel):
     question: str
 
 
-@app.post("/ask-agent/")
+@app.post("/api/ask-agent/")
 async def ask_agent(request: Request, user_input: AgentInput):
     ans = cot_agent(user_input.question)
     print(ans)
@@ -65,7 +65,7 @@ async def ask_agent(request: Request, user_input: AgentInput):
     return JSONResponse(content=processed_data)
 
 
-@app.post("/agent-summary/")
+@app.post("/api/agent-summary/")
 async def agent_summary(request: Request, user_input: AgentInput):
     ans = get_ans_summary(user_input.question)
     print(ans)

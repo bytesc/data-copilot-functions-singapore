@@ -35,7 +35,7 @@ def main():
         req = question
         if ans:
             with put_loading():
-                response = ai_agent_api(ans, "/agent-summary/")
+                response = ai_agent_api(ans, "/api/agent-summary/")
                 summary = response
                 put_markdown("## Ans Summary")
                 put_markdown(summary, sanitize=False)
@@ -45,7 +45,7 @@ def main():
 
         with put_loading():
             print(req)
-            response = ai_agent_api(req, "/ask-agent/")
+            response = ai_agent_api(req, "/api/ask-agent/")
             ans = response
         # print(response)
         # 检查响应并显示结果
