@@ -13,7 +13,7 @@ const handleSelect = (key: string, keyPath: string[]) => {
   console.log(key, keyPath)
 }
 
-const SqlStatement = reactive({
+const Question = reactive({
   content: '',
 })
 
@@ -34,7 +34,7 @@ const CurTableName = ref("")
 
 
 const onClear = () => {
-  SqlStatement.content=""
+  Question.content=""
   tableData.value=[]
   columns.value=[]
   SubmitData.value={}
@@ -52,52 +52,15 @@ const onSubmit = () => {
 
 const onHelp = () => {
   onClear()
-  SqlStatement.content="help"
+  Question.content="help"
   getTableData()
-  SqlStatement.content=""
-}
-
-const onLook = () => {
-  CurDatabaseName.value = ""
-  CurTableName.value = ""
-  SqlStatement.content="show databases;"
-  getTableData()
+  Question.content=""
 }
 
 
-const handleDbRowOp = (dbName) =>{
-  // console.log(dbName)
-  CurDatabaseName.value = dbName
-  CurTableName.value = ""
-  SqlStatement.content=`use database ${dbName};\nshow tables;`
-  getTableData()
-}
 
 
-const handleTableRowOp = (tbName)=>{
-  CurTableName.value = tbName
-  SqlStatement.content=`select * from ${tbName};`
-  getTableData()
-}
 
-const handleTableRowDel = (row) => {
-  let key = "id"
-  let id = row[key]
-  // 完整的 SQL 删除语句
-  SqlStatement.content = `DELETE FROM ${CurTableName.value} WHERE ${key}=${id};`
-  // 调用函数以刷新数据
-  getTableData();
-  SqlStatement.content =""
-}
-
-const handleTableRowAdd = (row)=>{
-  // SqlStatement.content = `INSERT INTO ${tableName.value}(列名称1，列名称2，...)  values(列值1，列值2，...)`
-  addDialogVisible.value=true
-  SubmitData.value = Object.keys(tableData.value[0]).reduce((acc, key) => {
-    acc[key] = ''; // 将每个键的值设置为空字符串
-    return acc;
-  }, {});
-}
 const handleTableRowAddCommit = ()=>{
   const buildInsertSql = (tableName, rowData) => {
     const columns = Object.keys(rowData).join(', ');
@@ -109,17 +72,12 @@ const handleTableRowAddCommit = ()=>{
     return `INSERT INTO ${tableName}(${columns}) VALUES(${values});`;
   };
 
-  SqlStatement.content = buildInsertSql(CurTableName.value, SubmitData.value);
+  Question.content = buildInsertSql(CurTableName.value, SubmitData.value);
   getTableData();
   addDialogVisible.value = false
 }
 
-const handleTableRowAlt = (row)=>{
-  // SqlStatement.content = `update ${tableName.value} set 列名称1=列值1，列名称2=列值2，... where 列名称=列值`
-  altDialogVisible.value=true
-  SubmitData.value = { ...row };
 
-}
 const handleTableRowAltCommit = ()=>{
   const buildUpdateSql = (tableName, rowData, key) => {
     const keyValue = rowData[key];
@@ -132,7 +90,7 @@ const handleTableRowAltCommit = ()=>{
     return `UPDATE ${tableName} SET ${setClause} WHERE ${key}=${keyValue};`;
   };
 
-  SqlStatement.content = buildUpdateSql(CurTableName.value, SubmitData.value, 'id');
+  Question.content = buildUpdateSql(CurTableName.value, SubmitData.value, 'id');
   getTableData();
   altDialogVisible.value = false
 }
@@ -141,7 +99,7 @@ import {requestPack} from "../utils/requests.js";
 import {Box, ChatDotRound, CloseBold, Coin, Files, House, Plus, Refrigerator, Tickets} from "@element-plus/icons-vue";
 const getTableData = async ()=>{
   // let res= await request.get(`user/list/?pageSize=${pageSize.value}&pageNum=${cur}`)
-  let res= await requestPack.post(`/mydbms/index?statement=${SqlStatement.content}`)
+  let res= await requestPack.post(`/mydbms/index?statement=${Question.content}`)
   console.log(res)
   tableData.value = res.msg
   console.log(res.msg)
@@ -184,9 +142,9 @@ const getTableData = async ()=>{
           <el-col :xs="24" :sm="24" :md="10" :lg="8" :xl="8"
           >
 
-            <el-form :model="SqlStatement" label-width="120px" label-position="top">
+            <el-form :model="Question" label-width="120px" label-position="top">
               <el-form-item label="Question">
-                <el-input v-model="SqlStatement.content" type="textarea" :rows="6"/>
+                <el-input v-model="Question.content" type="textarea" :rows="6"/>
               </el-form-item>
               <el-form-item>
                 <el-button type="success" @click="onHelp"><el-icon><ChatDotRound /></el-icon>Help</el-button>

@@ -13,7 +13,7 @@ from .tools.get_function_info import get_function_info
 
 from .ans_review import get_ans_review
 from .utils.final_output_parse import df_to_markdown, wrap_html_url_with_markdown_link, wrap_html_url_with_html_a
-from .utils.final_output_parse import wrap_png_url_with_markdown_image,is_png_url
+from .utils.final_output_parse import wrap_png_url_with_markdown_image,is_png_url, is_iframe_tag
 from .utils.pd_to_walker import pd_to_walker
 
 from .tools.map.population_api import get_population_api_info
@@ -91,11 +91,12 @@ def func():
 def cot_agent(question, retries=2, print_rows=10):
     exp = None
     for i in range(3):
+        html_map = ""
         cot_prompt, rag_ans, function_import = get_cot_prompt(question)
         print(rag_ans)
         # print(cot_prompt)
         if cot_prompt == "solved":
-            return rag_ans
+            return rag_ans,     None
         else:
             err_msg = ""
             for j in range(retries):
@@ -123,6 +124,9 @@ def cot_agent(question, retries=2, print_rows=10):
                             cot_ans += wrap_html_url_with_html_a(html_link)
                         elif isinstance(item, str) and is_png_url(item):
                             cot_ans += "\n" + wrap_png_url_with_markdown_image(item) + "\n"
+                        elif is_iframe_tag(item):
+                            html_map = str(item)
+                            cot_ans += "\n" + str(item) + "\n"
                         else:
                             cot_ans += "\n" + str(item) + "\n"
                         print(item)
@@ -135,10 +139,10 @@ def cot_agent(question, retries=2, print_rows=10):
 
                     logging.info(f"Question: {question}\nAnswer: {ans}\nCode: {code}\n")
 
-                    return ans
+                    return ans, html_map
                 except Exception as e:
                     err_msg = str(e) + "\n```python\n" + code + "\n```\n"
                     exp = e
                     print(e)
                     continue
-    return None
+    return None, None

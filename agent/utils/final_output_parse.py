@@ -40,6 +40,12 @@ def wrap_html_url_with_html_a(s):
     )
     return re.sub(url_regex, r'<a href="\1" target="_blank">Data</a>', s)+"\n"
 
+def is_iframe_tag(s):
+    iframe_regex = re.compile(
+        r'<iframe[^>]*></iframe>'
+    )
+    return len(re.findall(iframe_regex, s)) > 0
+
 
 
 def df_to_markdown(df, bold_header=False):

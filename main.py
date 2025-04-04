@@ -46,12 +46,13 @@ class AgentInput(BaseModel):
 
 @app.post("/api/ask-agent/")
 async def ask_agent(request: Request, user_input: AgentInput):
-    ans = cot_agent(user_input.question)
+    ans, map = cot_agent(user_input.question)
     print(ans)
     if ans:
         processed_data = {
             "question": user_input.question,
             "ans": ans,
+            "map": map,
             "type": "success",
             "msg": "处理成功"
         }
@@ -59,6 +60,7 @@ async def ask_agent(request: Request, user_input: AgentInput):
         processed_data = {
             "question": user_input.question,
             "ans": "",
+            "map": "",
             "type": "error",
             "msg": "处理失败，请换个问法吧"
         }
