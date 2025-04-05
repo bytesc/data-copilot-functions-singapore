@@ -10,7 +10,7 @@ import "nprogress/nprogress.css";
 // 全局配置
 const service = axios.create({
     baseURL:"/",
-    timeout:10000,  //请求超时
+    timeout:10000000,  //请求超时
 })
 
 service.interceptors.request.use(config => {
@@ -39,7 +39,7 @@ service.interceptors.response.use(res=>{
         //     console.log(res.data)
         //     return data
         // }
-        ElMessage.success("数据库响应成功")
+        ElMessage.success("响应成功")
         return res.data
     },
     error => {

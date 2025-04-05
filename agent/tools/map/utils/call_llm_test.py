@@ -2,7 +2,7 @@
 
 def call_llm(question, llm):
     response = llm.chat.completions.create(
-        model="qwen-max",
+        model="deepseek-chat",
         messages=[
             {"role": "system", "content": "You are a helpful assistant"},
             {"role": "user", "content": question},

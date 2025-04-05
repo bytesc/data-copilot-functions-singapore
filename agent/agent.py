@@ -126,16 +126,17 @@ def cot_agent(question, retries=2, print_rows=10):
                             cot_ans += "\n" + wrap_png_url_with_markdown_image(item) + "\n"
                         elif is_iframe_tag(item):
                             html_map = str(item)
-                            cot_ans += "\n" + str(item) + "\n"
+                            print(html_map)
+                            # cot_ans += "\n" + str(item) + "\n"
                         else:
                             cot_ans += "\n" + str(item) + "\n"
                         print(item)
 
-                    ans = "### Base knowledge: \n" + rag_ans + "\n\n"
-                    ans += "### COT Result: \n" + cot_ans + "\n"
+                    # ans = "### Base knowledge: \n" + rag_ans + "\n\n"
+                    ans = "### COT Result: \n" + cot_ans + "\n"
                     # print(ans)
-                    review_ans = get_ans_review(question, ans, code)
-                    ans += "## Summarize and review: \n" + review_ans + "\n"
+                    # review_ans = get_ans_review(question, ans, code)
+                    # ans += "## Summarize and review: \n" + review_ans + "\n"
 
                     logging.info(f"Question: {question}\nAnswer: {ans}\nCode: {code}\n")
 
