@@ -5,6 +5,7 @@ from .path_tools import generate_img_path
 def get_ask_graph_prompt(question, tmp_file=False):
     pre_prompt = """
 Please use matplotlib to draw a graph based on the question. 
+No calculation in this step, just draw graph with given data
 The Python function should return a string of file path in `./tmp_imgs/` only 
 and the image generated should be stored in that path. 
 file path must be:

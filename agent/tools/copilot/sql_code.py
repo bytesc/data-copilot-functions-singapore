@@ -1,3 +1,5 @@
+import logging
+
 from .utils.read_db import get_table_creation_statements, get_rows_from_all_tables, \
     get_table_and_column_comments
 from .utils.call_llm_test import call_llm
@@ -79,6 +81,7 @@ def query_database_func(question, df_cols, llm, engine, retries=2):
                 continue
             try:
                 result = execute_select(engine, sql)
+                logging.info(f"query_database_SQL: {sql}\nQuestion: {question}\nResult: {result}\n")
                 return result
             except Exception as e:
                 err_msg = str(e)
