@@ -5,9 +5,6 @@ defineProps({
   msg: String,
 })
 
-const addDialogVisible = ref(false)
-const altDialogVisible = ref(false)
-
 const activeIndex = ref('1')
 const handleSelect = (key: string, keyPath: string[]) => {
   console.log(key, keyPath)
@@ -51,49 +48,11 @@ const onSubmit = () => {
 }
 
 const onHelp = () => {
-  onClear()
-  Question.content="help"
-  getTableData()
-  Question.content=""
+
 }
 
 
 
-
-
-const handleTableRowAddCommit = ()=>{
-  const buildInsertSql = (tableName, rowData) => {
-    const columns = Object.keys(rowData).join(', ');
-    const values = Object.keys(rowData).map(key => {
-      const value = rowData[key];
-      return typeof value === 'string' ? `${value}` : value;
-    }).join(', ');
-
-    return `INSERT INTO ${tableName}(${columns}) VALUES(${values});`;
-  };
-
-  Question.content = buildInsertSql(CurTableName.value, SubmitData.value);
-  getTableData();
-  addDialogVisible.value = false
-}
-
-
-const handleTableRowAltCommit = ()=>{
-  const buildUpdateSql = (tableName, rowData, key) => {
-    const keyValue = rowData[key];
-    const setClause = Object.keys(rowData).filter(k => k !== key)
-        .map(k => {
-          const value = rowData[k];
-          return `${k}=${typeof value === 'string' ? `${value}` : value}`;
-        }).join(',');
-
-    return `UPDATE ${tableName} SET ${setClause} WHERE ${key}=${keyValue};`;
-  };
-
-  Question.content = buildUpdateSql(CurTableName.value, SubmitData.value, 'id');
-  getTableData();
-  altDialogVisible.value = false
-}
 
 import {requestPack} from "../utils/requests.js";
 import {Box, ChatDotRound, CloseBold, Coin, Files, House, Plus, Refrigerator, Tickets} from "@element-plus/icons-vue";
@@ -178,47 +137,6 @@ const getTableData = async ()=>{
   </el-container>
 
 
-  <el-dialog
-      v-model="addDialogVisible"
-      title="添加数据"
-      width="30%"
-      align-center
-  >
-    <el-form label-width="100px" :model="SubmitData" label-position="left" style="max-width: 600px">
-      <el-form-item v-for="(value, key) in SubmitData" :key="key" :label="key">
-        <el-input v-model="SubmitData[key]" />
-      </el-form-item>
-    </el-form>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="addDialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="handleTableRowAddCommit">
-          确定
-        </el-button>
-      </span>
-    </template>
-  </el-dialog>
-
-  <el-dialog
-      v-model="altDialogVisible"
-      title="修改数据"
-      width="30%"
-      align-center
-  >
-    <el-form label-width="100px" :model="SubmitData" label-position="left" style="max-width: 600px">
-      <el-form-item v-for="(value, key) in SubmitData" :key="key" :label="key">
-        <el-input v-model="SubmitData[key]" :disabled="key === 'id'"/>
-      </el-form-item>
-    </el-form>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="altDialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="handleTableRowAltCommit">
-          确定
-        </el-button>
-      </span>
-    </template>
-  </el-dialog>
 </template>
 
 <style scoped>
