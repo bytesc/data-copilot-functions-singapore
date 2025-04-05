@@ -27,7 +27,7 @@ const Question = reactive({
 // 聊天记录
 const chatLogs = ref([]);
 // 存储地图iframe
-const mapIframe = ref('');
+const mapIframe = ref('<iframe src="https://www.onemap.gov.sg/amm/amm.html?mapStyle=Default&zoomLevel=15&popupWidth=200" height="1200" width="1000" scrolling="no" frameborder="0" allowfullscreen="allowfullscreen"></iframe>');
 
 // 获取聊天数据的方法
 const getChatDataFromAgent = async () => {
