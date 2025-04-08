@@ -1,8 +1,9 @@
 
+from utils.get_config import config_data
 
 def call_llm(question, llm):
     response = llm.chat.completions.create(
-        model="deepseek-chat",
+        model=config_data["model_name"],
         messages=[
             {"role": "system", "content": "You are a helpful assistant"},
             {"role": "user", "content": question},

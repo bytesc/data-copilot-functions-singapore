@@ -4,3 +4,14 @@ server_host: "0.0.0.0"
 mysql: "mysql+pymysql://root:123456@localhost:3306/singapore_land"
 
 static_path: "http://127.0.0.1:8009/"
+
+model_name: "qwen-max"
+# glm-4
+# deepseek-chat
+# qwen-max
+
+model_url: "https://dashscope.aliyuncs.com/compatible-mode/v1"
+# https://open.bigmodel.cn/api/paas/v4/
+# https://api.deepseek.com/v1/
+# https://dashscope.aliyuncs.com/compatible-mode/v1
+
