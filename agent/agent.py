@@ -13,7 +13,7 @@ from .tools.get_function_info import get_function_info
 
 from .ans_review import get_ans_review
 from .utils.final_output_parse import df_to_markdown, wrap_html_url_with_markdown_link, wrap_html_url_with_html_a
-from .utils.final_output_parse import wrap_png_url_with_markdown_image,is_png_url, is_iframe_tag
+from .utils.final_output_parse import wrap_png_url_with_markdown_image, is_png_url, is_iframe_tag
 from .utils.pd_to_walker import pd_to_walker
 
 from .tools.map.population_api import get_population_api_info
@@ -23,6 +23,7 @@ IMPORTANT_MODULE = ["import pandas as pd", "import math", "import numpy as np"]
 
 logging.basicConfig(filename='./cot_agent_log.txt', level=logging.INFO,
                     format='%(asctime)s - %(message)s')
+
 
 def get_cot_prompt(question):
     data_prompt = get_db_info_prompt(engine, simple=True)
@@ -82,68 +83,67 @@ def func():
 ```
 """
     cot_prompt = "question:" + question + knowledge + database + pre_prompt + \
-                 function_prompt + str(function_info) +\
-                 api_prompt + str(api_info) +\
+                 function_prompt + str(function_info) + \
+                 api_prompt + str(api_info) + \
                  example_code
     return cot_prompt, rag_ans, function_import
 
 
-def cot_agent(question, retries=2, print_rows=10):
-    exp = None
-    for i in range(3):
-        html_map = ""
-        cot_prompt, rag_ans, function_import = get_cot_prompt(question)
-        print(rag_ans)
-        # print(cot_prompt)
-        if cot_prompt == "solved":
-            return rag_ans,     None
-        else:
-            err_msg = ""
-            for j in range(retries):
-                code = get_py_code(cot_prompt + err_msg, llm)
-                # print(code)
-                # code = insert_yield_statements(code)
-                code = insert_lines_into_function(code, function_import)
-                code = insert_lines_into_function(code, IMPORTANT_MODULE)
-                print(code)
-                if code is None:
-                    continue
-                try:
-                    result = execute_py_code(code)
-                    cot_ans = ""
-                    for item in result:
-                        # print(item)
-                        if isinstance(item, pd.DataFrame):
-                            if item.index.size > 10:
-                                cot_ans += df_to_markdown(item.head(print_rows)) + \
-                                           "\nfirst {} rows of {}\n".format(print_rows, len(item))
-                            else:
-                                cot_ans += df_to_markdown(item)
-                            html_link = pd_to_walker(item)
-                            # cot_ans += wrap_html_url_with_markdown_link(html_link)
-                            cot_ans += wrap_html_url_with_html_a(html_link)
-                        elif isinstance(item, str) and is_png_url(item):
-                            cot_ans += "\n" + wrap_png_url_with_markdown_image(item) + "\n"
-                        elif is_iframe_tag(item):
-                            html_map = str(item)
-                            print(html_map)
-                            # cot_ans += "\n" + str(item) + "\n"
-                        else:
-                            cot_ans += "\n" + str(item) + "\n"
-                        print(item)
+def cot_agent(code, retries=2, print_rows=10):
+    for j in range(retries):
+        if code is None:
+            continue
+        try:
+            result = execute_py_code(code)
+            cot_ans = ""
+            for item in result:
+                # print(item)
+                if isinstance(item, pd.DataFrame):
+                    if item.index.size > 10:
+                        cot_ans += df_to_markdown(item.head(print_rows)) + \
+                                   "\nfirst {} rows of {}\n".format(print_rows, len(item))
+                    else:
+                        cot_ans += df_to_markdown(item)
+                    html_link = pd_to_walker(item)
+                    # cot_ans += wrap_html_url_with_markdown_link(html_link)
+                    cot_ans += wrap_html_url_with_html_a(html_link)
+                elif isinstance(item, str) and is_png_url(item):
+                    cot_ans += "\n" + wrap_png_url_with_markdown_image(item) + "\n"
+                elif is_iframe_tag(item):
+                    html_map = str(item)
+                    cot_ans += "\n" + html_map + "\n"
+                else:
+                    cot_ans += "\n" + str(item) + "\n"
+                print(item)
 
-                    # ans = "### Base knowledge: \n" + rag_ans + "\n\n"
-                    ans = "### COT Result: \n" + cot_ans + "\n"
-                    # print(ans)
-                    # review_ans = get_ans_review(question, ans, code)
-                    # ans += "## Summarize and review: \n" + review_ans + "\n"
+            # ans = "### Base knowledge: \n" + rag_ans + "\n\n"
+            ans = "### COT Result: \n" + cot_ans + "\n"
+            # print(ans)
 
-                    logging.info(f"Question: {question}\nAnswer: {ans}\nCode: {code}\n")
+            return ans
+        except Exception as e:
+            print(e)
+            continue
+    return None
 
-                    return ans, html_map
-                except Exception as e:
-                    err_msg = str(e) + "\n```python\n" + code + "\n```\n"
-                    exp = e
-                    print(e)
-                    continue
-    return None, None
+
+def get_code(question, retries=2):
+    cot_prompt, rag_ans, function_import = get_cot_prompt(question)
+    print(rag_ans)
+    # print(cot_prompt)
+    if cot_prompt == "solved":
+        return rag_ans, None
+    else:
+        err_msg = ""
+        for j in range(retries):
+            code = get_py_code(cot_prompt + err_msg, llm)
+            # print(code)
+            # code = insert_yield_statements(code)
+            code = insert_lines_into_function(code, function_import)
+            code = insert_lines_into_function(code, IMPORTANT_MODULE)
+            print(code)
+            if code is None:
+                continue
+            return code
+
+
