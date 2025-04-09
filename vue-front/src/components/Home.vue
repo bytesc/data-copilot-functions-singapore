@@ -26,8 +26,6 @@ const Question = reactive({
 
 // 聊天记录
 const chatLogs = ref([]);
-// 存储地图iframe
-const mapIframe = ref('<iframe src="https://www.onemap.gov.sg/amm/amm.html?mapStyle=Default&zoomLevel=15&popupWidth=200" height="1200" width="1000" scrolling="no" frameborder="0" allowfullscreen="allowfullscreen"></iframe>');
 
 // 获取聊天数据的方法
 const getChatDataFromAgent = async () => {
@@ -45,8 +43,7 @@ const getChatDataFromAgent = async () => {
         content: response.ans,
         isMarkdown: true
       });
-      // 设置地图iframe
-      mapIframe.value = response.map;
+
     } else {
       chatLogs.value.push({
         role: 'user',
@@ -57,19 +54,17 @@ const getChatDataFromAgent = async () => {
         content: response.ans,
         isMarkdown: true
       });
-      mapIframe.value = ''; // 清空地图
+
       console.error(response.msg);
     }
   } catch (error) {
     console.error("Error fetching chat data:", error);
-    mapIframe.value = ''; // 清空地图
   }
 };
 
 const onClear = () => {
   Question.content = '';
   chatLogs.value = [];
-  mapIframe.value = ''; // 清空地图
 }
 
 const onHelp = () => {
@@ -106,18 +101,7 @@ const onSubmit = async () => {
       <el-main style="padding: 20px; margin-left: 20px;margin-right: 20px">
         <el-row :gutter="20">
           <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
-            <!-- Map iframe display area -->
-            <el-card class="box-card" style="margin-bottom: 20px; height: 100%;">
-              <template #header>
-                <div class="card-header">
-                  <span>Visualization</span>
-                </div>
-              </template>
-              <div v-if="mapIframe" v-html="mapIframe" style="height: 600px;"></div>
-              <div v-else style="height: 600px; display: flex; justify-content: center; align-items: center; color: #999;">
-                <span>Map visualization will appear here</span>
-              </div>
-            </el-card>
+
           </el-col>
 
           <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
