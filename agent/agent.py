@@ -88,6 +88,7 @@ def func():
                  example_code
     return cot_prompt, rag_ans, function_import
 
+
 def cot_agent(question, retries=2, print_rows=10):
     exp = None
     for i in range(3):
@@ -186,7 +187,7 @@ def exe_cot_code(code, retries=2, print_rows=10):
     return None
 
 
-def get_code(question, retries=2):
+def get_cot_code(question, retries=2):
     cot_prompt, rag_ans, function_import = get_cot_prompt(question)
     print(rag_ans)
     # print(cot_prompt)

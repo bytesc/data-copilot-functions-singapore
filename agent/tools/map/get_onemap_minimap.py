@@ -25,7 +25,7 @@ def get_minimap_func(lat_lng_list: Optional[List[Tuple[float, float]]] = None,
             base_string += f'&marker=postalcode:{postalcode}!colour:red'
 
     # 添加iframe的其他属性
-    base_string += '" height="1200" width="1000" scrolling="no" frameborder="0" allowfullscreen="allowfullscreen"></iframe>'
+    base_string += '" height="480" width="480" scrolling="no" frameborder="0" allowfullscreen="allowfullscreen"></iframe>'
 
     # print(base_string)
     return base_string

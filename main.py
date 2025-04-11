@@ -12,7 +12,7 @@ from starlette.responses import JSONResponse
 
 from utils.get_config import config_data
 
-from agent.agent import exe_cot_code, get_code, cot_agent
+from agent.agent import exe_cot_code, get_cot_code, cot_agent
 from agent.summary import get_ans_summary
 from agent.ans_review import get_ans_review
 
@@ -97,7 +97,7 @@ async def exe_code(request: Request, user_input: AgentInput):
 
 @app.post("/api/get-code/")
 async def get_code(request: Request, user_input: AgentInput):
-    code = get_code(user_input.question)
+    code = get_cot_code(user_input.question)
     print(code)
     if code:
         processed_data = {

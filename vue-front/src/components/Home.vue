@@ -24,43 +24,127 @@ const Question = reactive({
   content: '',
 })
 
-// 聊天记录
+// 聊天记录细节
 const chatLogs = ref([]);
 
+// 聊天记录
+const chat= ref([]);
+
+
 // 获取聊天数据的方法
+// const getChatDataFromAgent = async () => {
+//   try {
+//     const response = await requestPack.post("/api/ask-agent/", {
+//       question: Question.content
+//     });
+//     if (response.type === "success") {
+//       chatLogs.value.push({
+//         role: 'user',
+//         content: Question.content
+//       });
+//       chatLogs.value.push({
+//         role: 'agent',
+//         content: response.ans,
+//         isMarkdown: true
+//       });
+//
+//     } else {
+//       chatLogs.value.push({
+//         role: 'user',
+//         content: Question.content
+//       });
+//       chatLogs.value.push({
+//         role: 'agent',
+//         content: response.ans,
+//         isMarkdown: true
+//       });
+//
+//       console.error(response.msg);
+//     }
+//   } catch (error) {
+//     console.error("Error fetching chat data:", error);
+//   }
+// };
+
+
 const getChatDataFromAgent = async () => {
   try {
-    const response = await requestPack.post("/api/ask-agent/", {
+    let code = ""
+    let ans = ""
+    let response = await requestPack.post("/api/get-code/", {
       question: Question.content
     });
+
     if (response.type === "success") {
       chatLogs.value.push({
         role: 'user',
         content: Question.content
       });
+      chat.value.push({
+        role: 'user',
+        content: Question.content
+      });
+
       chatLogs.value.push({
+        role: 'agent',
+        content: response.code,
+        isMarkdown: true
+      });
+      code = response.code
+    } else {
+
+    }
+
+    response = await requestPack.post("/api/exe-code/", {
+      question: code
+    });
+    if (response.type === "success") {
+      chatLogs.value.push({
+        role: 'agent',
+        content: response.ans,
+        isMarkdown: true
+      });
+      ans = response.ans
+
+      chat.value.push({
         role: 'agent',
         content: response.ans,
         isMarkdown: true
       });
 
     } else {
-      chatLogs.value.push({
-        role: 'user',
-        content: Question.content
-      });
+
+    }
+
+    response = await requestPack.post("/api/review/", {
+      question: Question.content,
+      ans: ans,
+      code: code
+    });
+    if (response.type === "success") {
       chatLogs.value.push({
         role: 'agent',
         content: response.ans,
         isMarkdown: true
       });
 
-      console.error(response.msg);
+      chat.value.push({
+        role: 'agent',
+        content: response.ans,
+        isMarkdown: true
+      });
+
+    } else {
+
     }
+
   } catch (error) {
     console.error("Error fetching chat data:", error);
   }
 };
+
+
+
 
 const onClear = () => {
   Question.content = '';
@@ -100,11 +184,29 @@ const onSubmit = async () => {
     <el-container>
       <el-main style="padding: 20px; margin-left: 20px;margin-right: 20px">
         <el-row :gutter="20">
+
           <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
+
+            <el-card class="box-card" style="margin-bottom: 20px;">
+              <template #header>
+                <div class="card-header">
+                  <span>Chat</span>
+                </div>
+              </template>
+              <div class="chat-container">
+                <div class="chat-log" v-for="(log, index) in chat" :key="index">
+                  <div :class="log.role === 'user' ? 'user-log' : 'agent-log'">
+                    <div v-if="log.role === 'user'">{{ log.content }}</div>
+                    <div v-else v-html="md.render(log.content)" class="markdown-content"></div>
+                  </div>
+                </div>
+              </div>
+            </el-card>
 
           </el-col>
 
           <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
+
             <el-row :gutter="20">
               <el-col :span="24">
                 <el-card class="box-card" style="margin-bottom: 20px;">
@@ -136,9 +238,13 @@ const onSubmit = async () => {
                 <el-button @click="onClear"><el-icon><CloseBold /></el-icon> Clear</el-button>
               </el-form-item>
             </el-form>
+
           </el-col>
+
         </el-row>
       </el-main>
+
+
       <el-footer style="padding: 0">
         <el-row :gutter="20">
           <el-col :span="4" class="foot-bottom"><div class="grid-content ep-bg-purple" ></div></el-col>
