@@ -74,6 +74,7 @@ const getChatDataFromAgent = async () => {
     let response = await requestPack.post("/api/get-code/", {
       question: Question.content
     });
+    console.log(response)
 
     if (response.type === "success") {
       chatLogs.value.push({
@@ -98,6 +99,7 @@ const getChatDataFromAgent = async () => {
     response = await requestPack.post("/api/exe-code/", {
       question: code
     });
+    console.log(response)
     if (response.type === "success") {
       chatLogs.value.push({
         role: 'agent',
@@ -121,6 +123,7 @@ const getChatDataFromAgent = async () => {
       ans: ans,
       code: code
     });
+    console.log(response)
     if (response.type === "success") {
       chatLogs.value.push({
         role: 'agent',
