@@ -24,6 +24,10 @@ const Question = reactive({
   content: '',
 })
 
+const Cot = reactive({
+  content: '',
+})
+
 // 聊天记录细节
 const chatLogs = ref([]);
 
@@ -72,7 +76,7 @@ const getChatDataFromAgent = async () => {
     let code = ""
     let ans = ""
     let response = await requestPack.post("/api/get-code/", {
-      question: Question.content
+      question: Question.content+"\n"+Cot.content
     });
     console.log(response)
 
@@ -147,19 +151,58 @@ const getChatDataFromAgent = async () => {
 };
 
 
+const getCotChatFromAgent = async () => {
+  try {
+    const chatHistory = chat.value.map(log =>
+        `${log.role === 'user' ? 'User' : 'Agent'}: ${log.content}`
+    ).join('\n');
+    let response = await requestPack.post("/api/cot-chat/", {
+      question: chatHistory+"\n"+Question.content
+    });
+    console.log(response)
+
+    if (response.type === "success") {
+
+      chat.value.push({
+        role: 'user',
+        content: Question.content
+      });
+
+      chat.value.push({
+        role: 'agent',
+        content: response.ans,
+        isMarkdown: true
+      });
+
+      Cot.content = response.ans
+
+    } else {
+
+    }
+
+  } catch (error) {
+    console.error("Error fetching chat data:", error);
+  }
+};
+
 
 
 const onClear = () => {
   Question.content = '';
   chatLogs.value = [];
-}
-
-const onHelp = () => {
-  // Add help functionality here
+  chat.value = [];
+  Cot.content = ""
 }
 
 const onSubmit = async () => {
   if (Question.content.trim()) {
+    await getCotChatFromAgent();
+    Question.content = '';
+  }
+}
+
+const onExe = async () => {
+  if (Question.content.trim() || Cot.content.trim()) {
     await getChatDataFromAgent();
     Question.content = '';
   }
@@ -235,7 +278,7 @@ const onSubmit = async () => {
                 <el-input v-model="Question.content" type="textarea" :rows="6"/>
               </el-form-item>
               <el-form-item>
-                <el-button type="success" @click="onHelp"><el-icon><ChatDotRound /></el-icon>Help</el-button>
+                <el-button type="success" @click="onExe">Execute</el-button>
                 <div style="flex-grow: 1;"/>
                 <el-button type="primary" @click="onSubmit"><el-icon><Select /> </el-icon> Submit</el-button>
                 <el-button @click="onClear"><el-icon><CloseBold /></el-icon> Clear</el-button>
