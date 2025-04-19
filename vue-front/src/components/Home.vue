@@ -261,7 +261,7 @@ const onExe = async () => {
                       <span>Chat Logs</span>
                     </div>
                   </template>
-                  <div class="chat-container">
+                  <div class="chat-container chat-log-container">
                     <div class="chat-log" v-for="(log, index) in chatLogs" :key="index">
                       <div :class="log.role === 'user' ? 'user-log' : 'agent-log'">
                         <div v-if="log.role === 'user'">{{ log.content }}</div>
@@ -415,6 +415,10 @@ iframe {
   max-height: 800px; /* Adjust this value as needed */
   overflow-y: auto;
   padding-right: 8px; /* Prevents content from touching scrollbar */
+}
+
+.chat-log-container{
+  max-height: 600px;
 }
 
 /* Custom scrollbar styling (optional) */
