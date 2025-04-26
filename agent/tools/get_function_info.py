@@ -59,7 +59,7 @@ def get_function_info(question, llm):
     function_prompt = get_function_prompt(question)
     function_list_str = call_llm(function_prompt, llm).content
     if function_list_str == "solved":
-        return "solved", [], []
+        return {}, "solved", []
     function_list = [part.strip() for part in function_list_str.split(',')]
     for f in IMPORTANT_FUNC:
         if f not in function_list:

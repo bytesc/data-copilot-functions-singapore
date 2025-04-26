@@ -37,7 +37,7 @@ def get_cot_prompt(question):
     function_set, function_info, function_import = get_function_info(question, llm)
     # print(function_info)
     if function_info == "solved":
-        return "solved", rag_ans
+        return "solved", rag_ans, []
     print(function_info)
 
     api_info = ""
