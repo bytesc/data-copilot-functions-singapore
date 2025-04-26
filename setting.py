@@ -11,6 +11,14 @@ def main():
     put_markdown("# DATA COPILOT DB")
     first_five_rows = get_rows_from_all_tables(engine, None, num=5)
     # print(first_five_rows)
+    first_five_rows_json = {
+        table_name: {
+            "columns": rows.columns.tolist(),
+            "data": rows.values.tolist()
+        }
+        for table_name, rows in first_five_rows.items()
+    }
+    print(first_five_rows_json)
     with put_collapse(f"数据表："):
         for table_name, rows in first_five_rows.items():
             with put_collapse(f"表 {table_name}"):

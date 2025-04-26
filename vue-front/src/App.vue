@@ -1,9 +1,51 @@
-<script setup>
+<script lang="ts" setup>
+  import {Box, ChatDotRound, CloseBold, Coin, Files, House, Plus, Refrigerator, Tickets, Select} from "@element-plus/icons-vue";
+  import {ref} from "vue";
+  import {useRouter} from 'vue-router';
 
-import Home from "./components/Home.vue";
+  const router = useRouter();
+  const activeIndex = ref('1')
+
+  const handleSelect = (key: string) => {
+    if (key === '1') {
+      router.push('/');
+    } else if (key === '2') {
+      router.push('/setting');
+    }
+  }
+
+  // 你也可以根据当前路由设置 activeIndex
+  import {onMounted} from 'vue';
+  import {useRoute} from 'vue-router';
+
+  const route = useRoute();
+
+  onMounted(() => {
+    if (route.path === '/setting') {
+      activeIndex.value = '2';
+    } else {
+      activeIndex.value = '1';
+    }
+  });
 </script>
 
 <template>
+  <el-header style="padding: 0">
+    <el-menu
+        :default-active="activeIndex"
+        class="el-menu-demo"
+        mode="horizontal"
+        :ellipsis="false"
+        @select="handleSelect"
+        background-color="#545c64"
+        text-color="#fff"
+        active-text-color="#ffd04b"
+    >
+      <el-menu-item index="1"><h1><strong>Data Copilot</strong></h1></el-menu-item>
+      <el-menu-item index="2">Setting</el-menu-item>
+      <div class="flex-grow" />
+    </el-menu>
+  </el-header>
 <!--  <div>-->
 <!--    <a href="https://vitejs.dev" target="_blank">-->
 <!--      <img src="/vite.svg" class="logo" alt="Vite logo" />-->
@@ -12,10 +54,14 @@ import Home from "./components/Home.vue";
 <!--      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />-->
 <!--    </a>-->
 <!--  </div>-->
-  <Home msg="Vite + Vue" />
+<!--  <Home msg="Vite + Vue" />-->
+<!--  <router-link to="/">Home</router-link> |-->
+<!--  <router-link to="/setting">About</router-link>-->
+  <router-view></router-view>
 </template>
 
 <style scoped>
+
 /*.logo {*/
 /*  height: 6em;*/
 /*  padding: 1.5em;*/

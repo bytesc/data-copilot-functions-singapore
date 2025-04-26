@@ -15,10 +15,7 @@ defineProps({
   msg: String,
 })
 
-const activeIndex = ref('1')
-const handleSelect = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath)
-}
+
 
 const Question = reactive({
   content: '',
@@ -105,11 +102,11 @@ const getChatDataFromAgent = async () => {
     });
     console.log(response)
     if (response.type === "success") {
-      chatLogs.value.push({
-        role: 'agent',
-        content: response.ans,
-        isMarkdown: true
-      });
+      // chatLogs.value.push({
+      //   role: 'agent',
+      //   content: response.ans,
+      //   isMarkdown: true
+      // });
       ans = response.ans
 
       chat.value.push({
@@ -129,11 +126,11 @@ const getChatDataFromAgent = async () => {
     });
     console.log(response)
     if (response.type === "success") {
-      chatLogs.value.push({
-        role: 'agent',
-        content: response.ans,
-        isMarkdown: true
-      });
+      // chatLogs.value.push({
+      //   role: 'agent',
+      //   content: response.ans,
+      //   isMarkdown: true
+      // });
 
       chat.value.push({
         role: 'agent',
@@ -211,21 +208,6 @@ const onExe = async () => {
 
 <template>
   <el-container>
-    <el-header style="padding: 0">
-      <el-menu
-          :default-active="activeIndex"
-          class="el-menu-demo"
-          mode="horizontal"
-          :ellipsis="false"
-          @select="handleSelect"
-          background-color="#545c64"
-          text-color="#fff"
-          active-text-color="#ffd04b"
-      >
-        <el-menu-item index="1"><h1><strong>Data Copilot</strong></h1></el-menu-item>
-        <div class="flex-grow" />
-      </el-menu>
-    </el-header>
 
     <el-container>
       <el-main style="padding: 20px; margin-left: 20px;margin-right: 20px">

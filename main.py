@@ -179,5 +179,32 @@ async def cot_chat(request: Request, user_input: AgentInput):
     return JSONResponse(content=processed_data)
 
 
+from agent.tools.copilot.utils.read_db import get_rows_from_all_tables
+from agent.tools.tools_def import engine, llm
+@app.post("/api/db-slice/")
+async def db_slice(request: Request):
+    first_five_rows = get_rows_from_all_tables(engine, None, num=5)
+    from datetime import date, datetime
+    def convert_date(obj):
+        if isinstance(obj, (date, datetime)):
+            return obj.isoformat()
+        return obj
+
+    first_five_rows_json = {
+        table_name: {
+            "columns": rows.columns.tolist(),
+            "data": [[convert_date(item) for item in row] for row in rows.values.tolist()]
+        }
+        for table_name, rows in first_five_rows.items()
+    }
+
+    processed_data = {
+        "ans": first_five_rows_json,
+        "type": "success",
+        "msg": "处理成功"
+    }
+
+    return JSONResponse(content=processed_data)
+
 if __name__ == "__main__":
     uvicorn.run(app, host=config_data['server_host'], port=config_data['server_port'])
