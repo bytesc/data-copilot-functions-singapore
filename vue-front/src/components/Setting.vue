@@ -16,7 +16,7 @@
           <tbody>
           <tr v-for="(row, rowIndex) in tableData.data" :key="rowIndex">
             <td v-for="(cell, cellIndex) in row" :key="cellIndex">
-              {{ cell }}
+              <div class="cell-content">{{ cell }}</div>
             </td>
           </tr>
           </tbody>
@@ -83,6 +83,7 @@ getDbData();
   font-family: Arial, sans-serif;
   max-width: 100%;
   overflow-x: auto;
+  margin: 0 16px; /* Added left and right margins */
 }
 
 .table-section {
@@ -119,17 +120,30 @@ getDbData();
 
 .table-content {
   overflow-x: auto;
+  margin: 0 8px; /* Added left and right margins for table content */
 }
 
 table {
-  width: 100%;
+  width: calc(100% - 16px); /* Adjusted width to account for margins */
   border-collapse: collapse;
+  margin: 0 8px; /* Added left and right margins */
 }
 
 th, td {
   padding: 0.75rem;
   text-align: left;
   border-bottom: 1px solid #e0e0e0;
+  max-width: 200px; /* Limit cell width */
+}
+
+.cell-content {
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* Limit to 3 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.4; /* Adjust line height for better readability */
+  max-height: calc(1.4em * 3); /* Approximate height for 3 lines */
 }
 
 th {
@@ -145,6 +159,15 @@ tr:hover {
   th, td {
     padding: 0.5rem;
     font-size: 0.9rem;
+  }
+
+  .db-data-container {
+    margin: 0 8px; /* Smaller margins on mobile */
+  }
+
+  table {
+    width: calc(100% - 8px); /* Adjusted width for mobile */
+    margin: 0 4px;
   }
 }
 </style>
