@@ -44,7 +44,7 @@ service.interceptors.response.use(res=>{
     },
     error => {
         NProgress.done()
-        ElMessage.error("网络连接超时")
+        ElMessage.error(error)
         return Promise.reject(error);
     }
 )

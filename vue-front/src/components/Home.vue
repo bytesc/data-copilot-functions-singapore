@@ -25,12 +25,15 @@ const Cot = reactive({
   content: '',
 })
 
+const LastAns = reactive({
+  content: '',
+})
+
 // 聊天记录细节
 const chatLogs = ref([]);
 
 // 聊天记录
 const chat= ref([]);
-
 
 // 获取聊天数据的方法
 // const getChatDataFromAgent = async () => {
@@ -73,19 +76,19 @@ const getChatDataFromAgent = async () => {
     let code = ""
     let ans = ""
     let response = await requestPack.post("/api/get-code/", {
-      question: Question.content+"\n"+Cot.content
+      question: Question.content+"\n"+Cot.content+"\n"+LastAns.content+"\n"
     });
     console.log(response)
 
     if (response.type === "success") {
-      chatLogs.value.push({
-        role: 'user',
-        content: Question.content
-      });
-      chat.value.push({
-        role: 'user',
-        content: Question.content
-      });
+      // chatLogs.value.push({
+      //   role: 'user',
+      //   content: Question.content
+      // });
+      // chat.value.push({
+      //   role: 'user',
+      //   content: Question.content
+      // });
 
       chatLogs.value.push({
         role: 'agent',
@@ -114,6 +117,8 @@ const getChatDataFromAgent = async () => {
         content: response.ans,
         isMarkdown: true
       });
+
+      LastAns.content = response.ans
 
     } else {
 
@@ -164,6 +169,12 @@ const getCotChatFromAgent = async () => {
         role: 'user',
         content: Question.content
       });
+
+      let cleanedAns = response.ans.toLowerCase().replace(/\s+/g, '');
+      if (cleanedAns=="one"){
+        await getChatDataFromAgent()
+        return
+      }
 
       chat.value.push({
         role: 'agent',

@@ -42,6 +42,7 @@ def get_cot_chat_prompt(question):
 
     pre_prompt = """ 
 Please use the following functions to solve the problem.
+If you think the problem can be solved in one step, please return a single word: "one" without any other thing or explanation.
 Remind:
 1. Please tell me how to solve the problem step by step with Natural language.
 2. Do not mention code details.
@@ -60,6 +61,9 @@ We can solve the problem step by step:
 
 Example 2:
 I need you to clarify .....
+
+Example 3:
+one
     """
 
     cot_prompt = "question:" + question + knowledge + database + pre_prompt + \
