@@ -48,6 +48,7 @@ Remind:
 2. Do not mention code details.
 3. The chain of thought should be simple, short and clear.
 4. If you think it could not be solved, with what you have, ask the user to provide more information.
+5. If there are multiple approaches to solve the problem, try all of them.
 """
     function_prompt = """ 
 Here is the functions you can import and use:
