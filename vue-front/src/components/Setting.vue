@@ -1,4 +1,12 @@
 <template>
+<!--  <div class="svg-display">-->
+<!--    <img src="../assets/data-map.svg" alt="Database structure diagram">-->
+<!--  </div>-->
+  <div class="info-image-container">
+    <img src="../assets/info.png" alt="sys structure" class="info-image">
+  </div>
+
+
   <div class="db-data-container">
     <div v-for="(tableData, tableName) in ans" :key="tableName" class="table-section">
       <div class="table-header" @click="toggleTable(tableName)">
@@ -24,6 +32,22 @@
       </div>
     </div>
   </div>
+
+
+  <div class="svg-display-container">
+    <div class="svg-display-wrapper">
+      <div class="svg-display">
+        <img src="../assets/data-map.png" alt="Database structure diagram"
+             class="svg-image" :style="{ transform: `scale(${zoomLevel})` }">
+      </div>
+    </div>
+    <div class="svg-controls">
+      <button @click="zoomIn" class="zoom-button">+</button>
+      <button @click="zoomOut" class="zoom-button">−</button>
+      <button @click="resetZoom" class="zoom-button">Reset</button>
+    </div>
+  </div>
+
 </template>
 
 <script lang="ts" setup>
@@ -76,6 +100,22 @@ const formatColumnName = (name: string) => {
 };
 
 getDbData();
+
+
+const zoomLevel = ref(1);
+
+const zoomIn = () => {
+  zoomLevel.value = Math.min(zoomLevel.value + 0.1, 2);
+};
+
+const zoomOut = () => {
+  zoomLevel.value = Math.max(zoomLevel.value - 0.1, 0.5);
+};
+
+const resetZoom = () => {
+  zoomLevel.value = 1;
+};
+
 </script>
 
 <style scoped>
@@ -168,6 +208,100 @@ tr:hover {
   table {
     width: calc(100% - 8px); /* Adjusted width for mobile */
     margin: 0 4px;
+  }
+}
+
+.svg-display-container {
+  margin: 20px 16px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;  /* 为控制按钮创建定位上下文 */
+}
+
+.svg-display-wrapper {
+  overflow: auto;
+  max-height: 80vh;
+}
+
+.svg-display {
+  display: inline-block;
+  min-width: 100%;
+  text-align: center;
+}
+
+.svg-image {
+  max-width: 100%;
+  height: auto;
+  transition: transform 0.2s ease;
+  transform-origin: top left;
+  border: 1px solid #e0e0e0;
+  background-color: white;
+  padding: 10px;
+}
+
+.svg-controls {
+  position: absolute;  /* 使用绝对定位 */
+  bottom: 20px;       /* 距离容器底部的距离 */
+  right: 20px;        /* 距离容器右侧的距离 */
+  display: flex;
+  gap: 5px;
+  z-index: 10;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 5px;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.zoom-button {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.zoom-button:hover {
+  background-color: #f0f0f0;
+}
+
+@media (max-width: 768px) {
+  .svg-display-container {
+    margin: 10px 8px;
+    padding: 10px;
+  }
+
+  .svg-controls {
+    bottom: 5px;
+    right: 5px;
+  }
+}
+
+
+.info-image-container {
+  margin: 20px 16px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.info-image {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #e0e0e0;
+  background-color: white;
+  padding: 10px;
+}
+
+@media (max-width: 768px) {
+  .info-image-container {
+    margin: 10px 8px;
+    padding: 10px;
   }
 }
 </style>
