@@ -56,7 +56,6 @@ Please yield some information string during the function!
 Please yield the result of each step and function call!
 Please yield report many times during the function!!! not only yield at last! 
 None or empty DataFrame return handling for each function call is extremely important.
-Do not assign any example input or default value for user to replace with actual data!!! use None instead
 """
     function_prompt = """ 
 Here is the functions you can import and use:
@@ -68,8 +67,7 @@ def func():
     import pandas as pd
     import math
     # generate code to perform operations here
-    # Do not assign any example input or default value for user to replace with actual data!!! use None instead
-    
+     
     yield "A certain class’s grades are as follows:"  # yield some information and explanation
     df = query_database("The grades of a certain class", "Name, Course_name, Grade")   
     yield df  # the result of each step and function call
