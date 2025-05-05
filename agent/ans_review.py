@@ -19,8 +19,9 @@ Here is the user's question:
 Here is code assistant's used to generate the answer, 
 all the functions imported and called in it are already proven right and reliable:
 """ + "```python\n" + code + "\n```\n" + '''
-If any example input or default value for user to replace with actual data, problem not solved!!!
+
 '''
+# If any example input or default value for user to replace with actual data, problem not solved!!!
 
     ans_prompt = """
 Here is assistant's code's result:
@@ -37,7 +38,6 @@ Remind:
 4. What you ask the user to clarify must related to the database content we have.
 5. What you ask must about user query input, do not ask user to provide data.
 6. What you ask should be short and clear and in the same language with the question.
-7. If any example input or default value for user to replace with actual data in code, problem not solved!!!
 """
     return pre_prompt + question_prompt + code_prompt + ans_prompt + data_prompt + end_prompt
 
