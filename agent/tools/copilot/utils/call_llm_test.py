@@ -17,7 +17,9 @@ def call_llm(question, llm):
 
     answer = response.choices[0].message
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    log_entry = f"[{timestamp}]\nQ: {question}\nA: {answer}\n\n"
+    log_entry = f"[{timestamp}]*********************************************************************" \
+                f"\nQ:***\n {question}" \
+                f"\nA:***\n {answer.content}\n\n\n\n"
 
     try:
         # Create directory if it doesn't exist

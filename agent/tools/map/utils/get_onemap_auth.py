@@ -17,10 +17,10 @@ payload = {
 }
 print(payload)
 
-response = requests.request("POST", url, json=payload)
-print(response.text)
 
 try:
+    response = requests.request("POST", url, json=payload)
+    print(response.text)
     AUTH = json.loads(response.text)["access_token"]
 except Exception as e:
     print(e)
