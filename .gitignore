@@ -11,7 +11,7 @@ onemap_email.txt
 
 *.sqlite3
 
-cot_agent_log.txt
+agent_log.txt
 
 ./vue-front/node_modules
 ./vue-front/dist

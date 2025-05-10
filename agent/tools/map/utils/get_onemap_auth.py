@@ -20,6 +20,11 @@ print(payload)
 response = requests.request("POST", url, json=payload)
 print(response.text)
 
-AUTH = json.loads(response.text)["access_token"]
+try:
+    AUTH = json.loads(response.text)["access_token"]
+except Exception as e:
+    print(e)
+    print(response.text)
+    AUTH=""
 print(AUTH)
 

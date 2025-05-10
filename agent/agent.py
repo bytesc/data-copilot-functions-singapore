@@ -21,9 +21,6 @@ from .tools.custom_tools_def import get_api_result
 
 IMPORTANT_MODULE = ["import pandas as pd", "import math", "import numpy as np"]
 
-logging.basicConfig(filename='./cot_agent_log.txt', level=logging.INFO,
-                    format='%(asctime)s - %(message)s')
-
 
 def get_cot_prompt(question):
     data_prompt = get_db_info_prompt(engine, simple=True)
