@@ -44,13 +44,10 @@ Here is the functions you can use:
 """
     example_code = """
 Please only return the names list of the functions split by ","
-If you think the question is already solved by Base Knowledge, return a single word: "solved".
 Do not add any explanations of commands!!!
 
 Example 1:
 draw_graph, query_database
-Example 2:
-solved
 """
     return "question:" + question + pre_prompt + function_prompt + str(FUNCTION_DESCRIPTION) + example_code
 

@@ -92,7 +92,7 @@ def cot_agent(question, retries=2, print_rows=10):
         print(rag_ans)
         # print(cot_prompt)
         if cot_prompt == "solved":
-            return rag_ans,     None
+            return rag_ans, None
         else:
             err_msg = ""
             for j in range(retries):
@@ -120,7 +120,7 @@ def cot_agent(question, retries=2, print_rows=10):
                             cot_ans += wrap_html_url_with_html_a(html_link)
                         elif isinstance(item, str) and is_png_url(item):
                             cot_ans += "\n" + wrap_png_url_with_markdown_image(item) + "\n"
-                        elif is_iframe_tag(item):
+                        elif is_iframe_tag(str(item)):
                             html_map = str(item)
                             cot_ans += "\n" + str(item) + "\n"
                         else:
@@ -148,11 +148,13 @@ def exe_cot_code(code, retries=2, print_rows=10):
     for j in range(retries):
         if code is None:
             continue
+        cot_ans = ""
         try:
             result = execute_py_code(code)
-            cot_ans = ""
             for item in result:
-                # print(item)
+                if item is None:
+                    item = " "
+                print(item)
                 if isinstance(item, pd.DataFrame):
                     if item.index.size > 10:
                         cot_ans += df_to_markdown(item.head(print_rows)) + \
@@ -164,21 +166,20 @@ def exe_cot_code(code, retries=2, print_rows=10):
                     cot_ans += wrap_html_url_with_html_a(html_link)
                 elif isinstance(item, str) and is_png_url(item):
                     cot_ans += "\n" + wrap_png_url_with_markdown_image(item) + "\n"
-                elif is_iframe_tag(item):
+                elif isinstance(item, str) and is_iframe_tag(item):
                     html_map = str(item)
                     cot_ans += "\n" + html_map + "\n"
                 else:
                     cot_ans += "\n" + str(item) + "\n"
-                print(item)
 
-            # ans = "### Base knowledge: \n" + rag_ans + "\n\n"
-            ans = "### COT Result: \n" + cot_ans + "\n"
-            # print(ans)
-
-            return ans
         except Exception as e:
-            print(e)
-            continue
+            print("Error:", e)
+            if j < retries:
+                continue
+        # ans = "### Base knowledge: \n" + rag_ans + "\n\n"
+        ans = "### COT Result: \n" + cot_ans + "\n"
+        # print(ans)
+        return ans
     return None
 
 
@@ -200,5 +201,3 @@ def get_cot_code(question, retries=2):
             if code is None:
                 continue
             return code
-
-

@@ -41,31 +41,33 @@ def get_cot_chat_prompt(question):
         print(api_info)
 
     pre_prompt = """ 
-Please use the following functions to solve the problem.
-If you think the problem can be solved in one step, please return a single word: "one" without any other thing or explanation.
+
+If you think you can try to answer with your own knowledge and function call is not necessary, answer directly.
+Else if you need to call multiple functions, please tell me how to solve the problem step by step with Natural language.
+Else if you need to call just one function, return a single word "one" without anything else.
 Remind:
-1. Please tell me how to solve the problem step by step with Natural language.
-2. Do not mention code details.
-3. The chain of thought should be simple, short and clear.
-4. If you think it could not be solved, with what you have, ask the user to provide more information.
-5. If there are multiple approaches to solve the problem, try all of them.
+1. Do not mention code details.
+2. If needed, the chain of thought should be simple, short and clear.
+3. Do not go through steps in detail!!!
+4. Do not mention code detail, users are not specialists!!!
+
+You can use the following functions to solve the problem:
 """
     function_prompt = """ 
 Here is the functions you can import and use:
 """
     example_ans = """
 Example 1:
-We can solve the problem step by step:
-1. Step1
-2. Step2
-3. Step3
+1. Retrieve Age Data from database.
+2. Filter the Age Data.
+3. Draw the Graph.
 
 Example 2:
-I need you to clarify .....
+one
 
 Example 3:
-one
-    """
+I need you to clarify .....
+"""
 
     cot_prompt = "question:" + question + knowledge + database + pre_prompt + \
                  function_prompt + str(function_info) + \

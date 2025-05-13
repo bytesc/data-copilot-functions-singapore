@@ -24,7 +24,6 @@ try:
     AUTH = json.loads(response.text)["access_token"]
 except Exception as e:
     print(e)
-    print(response.text)
     AUTH=""
 print(AUTH)
 
