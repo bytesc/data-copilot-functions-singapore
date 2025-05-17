@@ -72,6 +72,8 @@ import { requestPack } from "../utils/requests.js";
 
 import MarkdownIt from 'markdown-it';
 
+import docsContent from '../assets/docs.md?raw';
+
 // Initialize markdown parser
 const md = new MarkdownIt({
   html: true,
@@ -79,29 +81,12 @@ const md = new MarkdownIt({
   typographer: true
 });
 
-const markdownContent = ref('');
+const markdownContent = ref(docsContent);
 const showMarkdown = ref(true);
 const toggleMarkdown = () => {
   showMarkdown.value = !showMarkdown.value;
 };
 
-// Function to load markdown file
-const loadMarkdownFile = async () => {
-  try {
-    // Adjust the path to your markdown file
-    const response = await fetch('../src/assets/docs.md');
-    if (response.ok) {
-      markdownContent.value = await response.text();
-    } else {
-      console.error('Failed to load markdown file');
-    }
-  } catch (error) {
-    console.error('Error loading markdown file:', error);
-  }
-};
-
-// Call the function when component mounts
-loadMarkdownFile();
 
 
 interface TableData {
