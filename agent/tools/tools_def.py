@@ -23,7 +23,7 @@ def query_database(question: str, df_cols: str | list = None) -> pd.DataFrame:
     Returns the query results in pandas DataFrame.
 
     Args:
-    - question (str): Natural language question.
+    - question (str): Natural language question, table names can be included in the question.
     - df_cols (str|list): The columns' names of the DataFrame(e.g. "uid, username, stu_num").
 
     Returns:
@@ -32,7 +32,7 @@ def query_database(question: str, df_cols: str | list = None) -> pd.DataFrame:
 
     Example:
     ```python
-        ans_df = query_database('Select the grades of Jane Smith(use table stu_grade ,stu_info, class_info)', df_cols='lesson_id, lesson_name, grade')
+        ans_df = query_database('Select the grades of Jane Smith, use table stu_grade ,stu_info, class_info', df_cols='lesson_id, lesson_name, grade')
         # Output(pd.DataFrame):
         #        lesson_id lesson_name grade
         # 0        001  Mathematics     99.00

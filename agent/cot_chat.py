@@ -48,7 +48,7 @@ Else if you need to call just one function, return a single word "one" without a
 Remind:
 1. Do not mention code details.
 2. If needed, the chain of thought should be simple, short and clear.
-3. If used database, you should clarify the tables should be used.
+3. If used database, you should clarify the tables should be used!!!
 4. Do not go through steps in detail!!!
 5. Do not mention code detail, users are not specialists!!!
 

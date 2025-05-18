@@ -52,6 +52,7 @@ Please yield explanation string of each step as kind of report!
 Please yield some information string during the function!
 Please yield the result of each step and function call!
 Please yield report many times during the function!!! not only yield at last! 
+Please yield the tables used before query database function!!!
 None or empty DataFrame return handling for each function call is extremely important.
 """
     function_prompt = """ 
@@ -65,8 +66,9 @@ def func():
     import math
     # generate code to perform operations here
      
-    yield "A01 class’s grades are as follows(use table stu_info ,stu_grade):"  # yield some information and explanation
-    df = query_database("The grades of a A01 class(use table stu_info ,stu_grade)", "Name, Course_name, Grade")   
+    yield "A01 class’s grades are as follows:"  # yield some information and explanation
+    yield "use table: stu_info ,stu_grade"  # yield tables names before query database function
+    df = query_database("The grades of a A01 class, use table stu_info ,stu_grade", "Name, Course_name, Grade")   
     yield df  # the result of each step and function call
     # None or empty DataFrame return handling for each function call.
     if df == None:
