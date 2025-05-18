@@ -1,6 +1,6 @@
 from .copilot.utils.call_llm_test import call_llm
 from .tools_def import draw_graph, query_database
-from .custom_tools_def import get_minimap, get_api_result, house_price_prediction_model
+from .custom_tools_def import get_minimap, get_api_result, house_price_prediction_model, find_schools_near_postcode
 
 
 FUNCTION_DICT = {
@@ -9,6 +9,7 @@ FUNCTION_DICT = {
     "get_minimap": get_minimap,
     "get_api_result": get_api_result,
     "house_price_prediction_model": house_price_prediction_model,
+    "find_schools_near_postcode": find_schools_near_postcode,
 }
 
 FUNCTION_IMPORT = {
@@ -17,6 +18,7 @@ FUNCTION_IMPORT = {
     get_minimap: "from agent.tools.custom_tools_def import get_minimap",
     get_api_result: "from agent.tools.custom_tools_def import get_api_result",
     house_price_prediction_model: "from agent.tools.custom_tools_def import house_price_prediction_model",
+    find_schools_near_postcode: "from agent.tools.custom_tools_def import find_schools_near_postcode",
 }
 
 ASSIST_FUNCTION_DICT = {
