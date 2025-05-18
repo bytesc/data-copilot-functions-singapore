@@ -32,7 +32,7 @@ def query_database(question: str, df_cols: str | list = None) -> pd.DataFrame:
 
     Example:
     ```python
-        ans_df = query_database('Select the grades of Jane Smith', df_cols='lesson_id, lesson_name, grade')
+        ans_df = query_database('Select the grades of Jane Smith(use table stu_grade ,stu_info, class_info)', df_cols='lesson_id, lesson_name, grade')
         # Output(pd.DataFrame):
         #        lesson_id lesson_name grade
         # 0        001  Mathematics     99.00

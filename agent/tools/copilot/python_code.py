@@ -31,11 +31,12 @@ Here is the dataframe sample(it is just data structure samples not real data):
 """ + str(data_slice)
 
     end_prompt = """
-All code should be completed in a single markdown code block without any comments, explanations or cmds.
-The function should not be called, do not print anything in the function.
-Please import the module you need, modules must be imported inside the function.
-Never use `input()` in code !!! Never use `input()` in code !!!
-Do not mock any data !!! 
+Remind:
+1. All code should be completed in a single markdown code block without any comments, explanations or cmds.
+2. The function should not be called, do not print anything in the function.
+3. Please import the module you need, modules must be imported inside the function.
+4. Do not mock any data !!!
+5. Do not use `input()` !!!
 """
 
     final_prompt = pre_prompt + question + "\n" + data_prompt + end_prompt
@@ -78,6 +79,7 @@ Remind:
 2. The function should not be called, do not print anything in the function.
 3. Please import the module you need, modules must be imported inside the function.
 4. Do not mock any data !!!
+5. Do not use `input()` !!!
 """
 
     final_prompt = pre_prompt + question + "\n" + end_prompt

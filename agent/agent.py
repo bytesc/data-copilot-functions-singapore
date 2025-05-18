@@ -65,8 +65,8 @@ def func():
     import math
     # generate code to perform operations here
      
-    yield "A certain class’s grades are as follows:"  # yield some information and explanation
-    df = query_database("The grades of a certain class", "Name, Course_name, Grade")   
+    yield "A01 class’s grades are as follows(use table stu_info ,stu_grade):"  # yield some information and explanation
+    df = query_database("The grades of a A01 class(use table stu_info ,stu_grade)", "Name, Course_name, Grade")   
     yield df  # the result of each step and function call
     # None or empty DataFrame return handling for each function call.
     if df == None:
