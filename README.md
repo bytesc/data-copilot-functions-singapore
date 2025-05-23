@@ -1,4 +1,4 @@
-# smart class
+# data-copilot
 
 
 ✨ **基于代码生成和函数调用(function call)的大语言模型(LLM)智能体**
@@ -7,7 +7,6 @@
 支持自定义函数(function call)和Agent调用，多智能体协同。
 基于代码生成的思维链(COT)。
 实现智能体对用户的反问，解决用户提问模糊、不完整的情况。
-Pywebio 交互式前端网页，不必须 openai api，100%纯 Python 代码。
 
 🚩[English Readme](./README.en.md)
 
