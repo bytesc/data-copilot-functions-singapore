@@ -177,11 +177,13 @@ npm run dev
 ```bash
 cd ./vue-front/
 npm run build
-# 使用 nginx 等工具部署编译生成的 dist 文件夹
 ```
 
-修改`./vue-front/front-server/front-server.py`
+可以使用 nginx 等工具部署编译生成的 dist 文件夹
 
+也可以使用 python 脚本部署
+
+修改`./vue-front/front-server/front-server.py`
 ```python
 BASE_URL = "http://127.0.0.1:8009" # 后端地址
 HOST = "0.0.0.0" # 前端 allow host
