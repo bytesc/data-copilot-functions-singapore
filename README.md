@@ -100,45 +100,29 @@ pip install -r requirement.txt
 `config.yaml`
 ```yml
 # config
-server_port: 8003
-server_host: "0.0.0.0"
-# 填写数据库连接
-mysql: "mysql+pymysql://root:123456@localhost:3306/smart_class2"
+server_port: 8009 # 部署端口
+server_host: "0.0.0.0"  # allow host
+# 数据库
+mysql: "mysql+pymysql://root:123456@localhost:3306/singapore_land"
 
-static_path: "http://127.0.0.1:8003/"
+# 静态文件服务地址，本机域名/ip:端口
+static_path: "http://127.0.0.1:8009/"
+
+model_name: "qwen-max"
+# glm-4
+# deepseek-chat
+# qwen-max
+
+model_url: "https://dashscope.aliyuncs.com/compatible-mode/v1"
+# https://open.bigmodel.cn/api/paas/v4/
+# https://api.deepseek.com/v1/
+# https://dashscope.aliyuncs.com/compatible-mode/v1
+
+
 ```
 
 ### 大语言模型配置
 
-`agent\utils\llm_access\`文件夹包含大语言模型配置
-
-`agent\utils\llm_access\LLM.py` 填写大语言模型(LLM)链接
-```python
-def get_llm():
-    # 此处填写大语言模型(LLM)链接
-    llm = OpenAI(api_key=get_api_key_from_file("./agent/utils/llm_access/api_key_openai.txt"),
-                 base_url="https://dashscope.aliyuncs.com/compatible-mode/v1")
-    return llm
-    # https://open.bigmodel.cn/api/paas/v4/
-    # https://api.deepseek.com/v1/
-    # https://dashscope.aliyuncs.com/compatible-mode/v1
-```
-
-`agent\tools\copilot\utils\call_llm_test.py`和 `agent\tools\rag\utils\call_llm_test.py` 填写模型名称
-```python
-def call_llm(question, llm):
-    response = llm.chat.completions.create(
-        model="qwen-max",  # 此处填写模型名称
-        messages=[
-            {"role": "system", "content": "You are a helpful assistant"},
-            {"role": "user", "content": question},
-        ],
-        stream=False
-    )
-    # glm-4
-    # deepseek-chat
-    # qwen-max
-```
 
 新建文件：`agent\utils\llm_access\api_key_openai.txt` 在其中填写`api-key`
 
@@ -148,15 +132,69 @@ def call_llm(question, llm):
 - glm:[https://open.bigmodel.cn/](https://open.bigmodel.cn/)
 
 
+### Onemap API
+
+新建文件：`agent/tools/map/utils/onemap_email.txt` 在其中填写邮箱
+
+新建文件：`agent/tools/map/utils/onemap_password.txt` 在其中填写密码
 
 ### 运行
+
+#### 服务端
 
 ```bash
 # 服务端
 python ./main.py
-# 客户端
-python ./front.py
 ```
+
+#### 前端
+
+如果以 dev 模式运行
+修改`./vue-front/vite.config.js`
+
+```javascript
+export default defineConfig({
+  plugins: [vue()],
+  server:{
+    port : 8086, //前端指定部署端口号
+    proxy:{
+      "/api":{  //后端地址
+        target:"http://127.0.0.1:8009/"
+      }
+    }
+  },
+  base: "./" 
+})
+```
+
+```bash
+cd ./vue-front/
+npm install
+npm run dev
+```
+
+如果编译运行
+
+```bash
+cd ./vue-front/
+npm run build
+# 使用 nginx 等工具部署编译生成的 dist 文件夹
+```
+
+修改`./vue-front/front-server/front-server.py`
+
+```python
+BASE_URL = "http://127.0.0.1:8009" # 后端地址
+HOST = "0.0.0.0" # 前端 allow host
+PORT = 8086 # 前端 端口号
+```
+
+```bash
+# 启动前端服务
+cd ./vue-front/front-server/
+python front-server.py
+```
+
 
 ### 自定义 function call
 

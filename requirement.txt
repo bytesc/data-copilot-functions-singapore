@@ -2,6 +2,7 @@ fastapi==0.103.2
 pyjwt==2.10.1
 pydantic==2.10.5
 SQLAlchemy==2.0.36
+
 PyMySQL==1.1.0
 
 
@@ -11,7 +12,7 @@ pandas==2.2.2
 Pillow==9.4.0
 matplotlib==3.8.3
 pygwalker==0.4.9.13
-Django=5.0.4
+Django==5.0.4
 django-simpleui==2024.11.15
 
 shap == 0.47.2
