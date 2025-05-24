@@ -111,12 +111,13 @@ model_name: "qwen-max"
 # glm-4
 # deepseek-chat
 # qwen-max
+# gpt-4o-mini
 
 model_url: "https://dashscope.aliyuncs.com/compatible-mode/v1"
 # https://open.bigmodel.cn/api/paas/v4/
 # https://api.deepseek.com/v1/
 # https://dashscope.aliyuncs.com/compatible-mode/v1
-
+# https://api.openai.com/v1
 
 ```
 
