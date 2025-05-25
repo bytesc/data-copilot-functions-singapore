@@ -1,25 +1,6 @@
 import sqlalchemy
 
 
-def from_username_to_uid_func(username: str, engine):
-    conn = engine.connect()
-    try:
-        result = conn.execute(sqlalchemy.text("""
-                        SELECT uid FROM user_info WHERE username=:username
-                                            """),
-                              {"username": username})
-        conn.commit()
-        user_result = result.fetchone()
-        if user_result:
-            return user_result[0]
-        return None
-    except Exception as e:
-        print(e)
-        raise e
-    finally:
-        conn.close()
-
-
 def find_schools_near_postcode_func(postcode: str, engine, radius_km: float = 2.0):
     """
     Find schools near a given postal code within a specified radius.
