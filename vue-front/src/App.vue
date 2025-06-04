@@ -1,32 +1,51 @@
+
+
+
+
 <script lang="ts" setup>
-  import {Box, ChatDotRound, CloseBold, Coin, Files, House, Plus, Refrigerator, Tickets, Select} from "@element-plus/icons-vue";
-  import {ref} from "vue";
-  import {useRouter} from 'vue-router';
+import {Box, ChatDotRound, CloseBold, Coin, Files, House, Plus, Refrigerator, Tickets, Select} from "@element-plus/icons-vue";
+import {ref} from "vue";
+import {useRouter} from 'vue-router';
 
-  const router = useRouter();
-  const activeIndex = ref('1')
+const router = useRouter();
+const activeIndex = ref('1')
 
-  const handleSelect = (key: string) => {
-    if (key === '1') {
-      router.push('/');
-    } else if (key === '2') {
-      router.push('/setting');
-    }
+const handleSelect = (key: string) => {
+  if (key === '1') {
+    router.push('/');
+  } else if (key === '2') {
+    router.push('/data');
+  } else if (key === '3') {
+    router.push('/api');
+  } else if (key === '4') {
+    router.push('/functions');
   }
+  else if (key === '5') {
+    router.push('/system');
+  }
+  // else if (key === '6') {
+  //   router.push('/setting');
+  // }
+}
 
-  // 你也可以根据当前路由设置 activeIndex
-  import {onMounted} from 'vue';
-  import {useRoute} from 'vue-router';
+// Set active index based on current route
+import {onMounted} from 'vue';
+import {useRoute} from 'vue-router';
 
-  const route = useRoute();
+const route = useRoute();
 
-  onMounted(() => {
-    if (route.path === '/setting') {
-      activeIndex.value = '2';
-    } else {
-      activeIndex.value = '1';
-    }
-  });
+onMounted(() => {
+  const pathToIndexMap: Record<string, string> = {
+    '/': '1',
+    '/data': '2',
+    '/api': '3',
+    '/functions': '4',
+    '/system': '5',
+    // '/setting': '6'
+  };
+
+  activeIndex.value = pathToIndexMap[route.path] || '1';
+});
 </script>
 
 <template>
@@ -42,21 +61,26 @@
         active-text-color="#ffd04b"
     >
       <el-menu-item index="1"><h1><strong>Data Copilot</strong></h1></el-menu-item>
-      <el-menu-item index="2">Setting</el-menu-item>
+      <el-menu-item index="2">Data</el-menu-item>
+      <el-menu-item index="3">API</el-menu-item>
+      <el-menu-item index="4">Functions</el-menu-item>
+      <el-menu-item index="5">System</el-menu-item>
+<!--      <el-menu-item index="6">Setting</el-menu-item>-->
       <div class="flex-grow" />
     </el-menu>
   </el-header>
-<!--  <div>-->
-<!--    <a href="https://vitejs.dev" target="_blank">-->
-<!--      <img src="/vite.svg" class="logo" alt="Vite logo" />-->
-<!--    </a>-->
-<!--    <a href="https://vuejs.org/" target="_blank">-->
-<!--      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />-->
-<!--    </a>-->
-<!--  </div>-->
-<!--  <Home msg="Vite + Vue" />-->
-<!--  <router-link to="/">Home</router-link> |-->
-<!--  <router-link to="/setting">About</router-link>-->
+
+  <!--  <div>-->
+  <!--    <a href="https://vitejs.dev" target="_blank">-->
+  <!--      <img src="/vite.svg" class="logo" alt="Vite logo" />-->
+  <!--    </a>-->
+  <!--    <a href="https://vuejs.org/" target="_blank">-->
+  <!--      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />-->
+  <!--    </a>-->
+  <!--  </div>-->
+  <!--  <Home msg="Vite + Vue" />-->
+  <!--  <router-link to="/">Home</router-link> |-->
+  <!--  <router-link to="/setting">About</router-link>-->
   <router-view></router-view>
 </template>
 
