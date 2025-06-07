@@ -10,6 +10,7 @@ llm = get_llm()
 from .map.get_onemap_minimap import get_minimap_func
 from .map.utils.api_call import get_api_result_func
 from .db.query_db import find_schools_near_postcode_func
+from .map.map_cal import find_preschools_in_walking_distance_func
 
 
 def get_minimap(lat_lng_list: Optional[List[Tuple[float, float]]] = None,
@@ -136,11 +137,11 @@ def house_price_prediction_model(month="", storey_range="", town="",
     return pred[0]
 
 
-def find_schools_near_postcode(postcode: str, radius_km: float = 2.0) -> list:
+def find_schools_near_postcode(postcode: str, radius_km: float = 2.0) -> pd.DataFrame:
     """
-    find_schools_near_postcode(postcode: str, radius_km: float = 2.0) -> list:
+    find_schools_near_postcode(postcode: str, radius_km: float = 2.0) -> pd.DataFrame:
     Find schools near a given postal code within a specified radius.
-    Returns a list of dictionaries containing school information.
+    Returns a pandas DataFrame containing school information.
 
     The function queries a database to find schools located within a certain distance
     (in kilometers) from the specified postal code. Each school's information includes
@@ -151,8 +152,8 @@ def find_schools_near_postcode(postcode: str, radius_km: float = 2.0) -> list:
     - radius_km (float): Search radius in kilometers. Default is 2.0 km.
 
     Returns:
-    - list: A list of dicts where each dictionary contains information about
-      a school within the specified radius. Each dictionary includes:
+    - pd.DataFrame: A DataFrame where each row contains information about
+      a school within the specified radius. Columns include:
         - school_name: Name of the school
         - address: Full address of the school
         - postcode: Postcode of the school
@@ -162,21 +163,54 @@ def find_schools_near_postcode(postcode: str, radius_km: float = 2.0) -> list:
 
     Example usage:
     ```python
-    schools = find_schools_near_postcode("139951", 1.5)
+    schools_df = find_schools_near_postcode("139951", 1.5)
 
-    # Output(list):
-    # [
-    #     {
-    #         "school_name": "NATIONAL JUNIOR COLLEGE",
-    #         "address": "37 HILLCREST ROAD",
-    #         "postcode": "288913",
-    #         "telephone": "64667755",
-    #         "email": "njc@moe.edu.sg",
-    #         "distance_km": 0.8
-    #     },
-    #     ...
-    # ]
+    # Output (pd.DataFrame):
+    #                             school_name            address postcode telephone            email  distance_km
+    # 0               NATIONAL JUNIOR COLLEGE  37 HILLCREST ROAD  288913  64667755  njc@moe.edu.sg          0.8
+    # 1  ANGLO-CHINESE SCHOOL (INDEPENDENT)     121 DOVER ROAD   138650  67731611  acsind@acs.edu.sg         1.2
+    #
+    # [2 rows x 6 columns]
     ```
     """
     school_list = find_schools_near_postcode_func(postcode, engine, radius_km)
-    return school_list
+    return pd.DataFrame(school_list)
+
+
+def find_preschools_in_walking_distance(postcode: str, walking_km: float = 2.0) -> pd.DataFrame:
+    """
+    find_preschools_in_walking_distance(postcode: str, walking_km: float = 2.0) -> pd.DataFrame:
+    Find preschools within walking distance of a given postal code.
+    Returns a pandas DataFrame containing preschool information with walking distance and time.
+
+    The function first queries preschools within a straight-line distance from the specified postal code,
+    then calculates actual walking routes to determine precise walking distances and times.
+    Each preschool's information includes name, code, license details, and walking metrics.
+
+    Args:
+    - postcode (str): The postal code to search around (e.g., "123456")
+    - walking_km (float): Initial straight-line search radius in kilometers. Default is 2.0 km.
+
+    Returns:
+    - pd.DataFrame: A DataFrame where each row contains information about
+      a preschool within walking distance. Columns include:
+        - centre_name: Name of the preschool
+        - centre_code: Unique code of the preschool
+        - latitude: Geographic latitude
+        - longitude: Geographic longitude
+        - walking_distance_km: Actual walking distance in kilometers
+        - walking_time_min: Estimated walking time in minutes
+
+    Example usage:
+    ```python
+    preschools_df = find_preschools_in_walking_distance("139951", 1.5)
+
+    # Output (pd.DataFrame):
+    #            centre_name centre_code  latitude  longitude class_of_licence  ...  fees type_of_citizenship walking_distance_km walking_time_min
+    # 0  KIDZ MEADOW CHILDCARE     PC-0001    1.2345   103.4567         Full Day  ...  $800-$1200               All                 0.8             10.5
+    #
+    # [1 rows x 11 columns]
+    ```
+    """
+    preschool_list = find_preschools_in_walking_distance_func(postcode, engine, walking_km)
+    return pd.DataFrame(preschool_list)

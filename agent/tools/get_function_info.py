@@ -1,6 +1,6 @@
 from .copilot.utils.call_llm_test import call_llm
 from .tools_def import draw_graph, query_database
-from .custom_tools_def import get_minimap, get_api_result, find_schools_near_postcode
+from .custom_tools_def import get_minimap, get_api_result, find_schools_near_postcode, find_preschools_in_walking_distance
 from .custom_tools_def import  house_price_prediction_model
 
 FUNCTION_DICT = {
@@ -10,6 +10,7 @@ FUNCTION_DICT = {
     "get_api_result": get_api_result,
     "house_price_prediction_model": house_price_prediction_model,
     "find_schools_near_postcode": find_schools_near_postcode,
+    "find_preschools_in_walking_distance": find_preschools_in_walking_distance
 }
 
 FUNCTION_IMPORT = {
@@ -19,6 +20,7 @@ FUNCTION_IMPORT = {
     get_api_result: "from agent.tools.custom_tools_def import get_api_result",
     house_price_prediction_model: "from agent.tools.custom_tools_def import house_price_prediction_model",
     find_schools_near_postcode: "from agent.tools.custom_tools_def import find_schools_near_postcode",
+    find_preschools_in_walking_distance: "from agent.tools.custom_tools_def import find_preschools_in_walking_distance",
 }
 
 ASSIST_FUNCTION_DICT = {
