@@ -14,14 +14,9 @@ def calculate_distance_km(coord1: Tuple[float, float],
     Returns:
         Distance in kilometers as float if successful, None if invalid input
 
-    Raises:
-        Does not raise exceptions - all errors are caught and return None
-
     Examples:
         >>> calculate_distance_km((40.7128, -74.0060), (34.0522, -118.2437))
         3935.328919218516
-        >>> calculate_distance_km((91, 0), (0, 0))  # Invalid latitude
-        None
     """
     try:
         # Validate coordinate ranges

@@ -63,10 +63,10 @@ def find_schools_near_postcode_func(postcode: str, engine, radius_km: float = 2.
                 "postcode": row[2],
                 "telephone": row[3],
                 "email": row[4],
-                "mrt": row[5],
-                "bus": row[6],
-                "latitude": row[7],
-                "longitude": row[8],
+                # "mrt": row[5],
+                # "bus": row[6],
+                # "latitude": row[7],
+                # "longitude": row[8],
                 "distance_km": row[9]
             })
 

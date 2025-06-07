@@ -158,10 +158,6 @@ def find_schools_near_postcode(postcode: str, radius_km: float = 2.0) -> list:
         - postcode: Postcode of the school
         - telephone: Contact telephone number
         - email: Email address
-        - mrt: Nearby MRT stations
-        - bus: Nearby bus services
-        - latitude: Geographic latitude
-        - longitude: Geographic longitude
         - distance_km: Distance from the input postcode in kilometers
 
     Example usage:
@@ -176,10 +172,6 @@ def find_schools_near_postcode(postcode: str, radius_km: float = 2.0) -> list:
     #         "postcode": "288913",
     #         "telephone": "64667755",
     #         "email": "njc@moe.edu.sg",
-    #         "mrt": "Newton (NS21,DT11)",
-    #         "bus": "48, 66, 67, 170, 171, 700, 960",
-    #         "latitude": 1.3156,
-    #         "longitude": 103.844,
     #         "distance_km": 0.8
     #     },
     #     ...
