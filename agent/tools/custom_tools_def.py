@@ -155,7 +155,7 @@ def find_schools_near_postcode(postcode: str, radius_km: float = 2.0) -> list:
       a school within the specified radius. Each dictionary includes:
         - school_name: Name of the school
         - address: Full address of the school
-        - postal_code: Postal code of the school
+        - postcode: Postcode of the school
         - telephone: Contact telephone number
         - email: Email address
         - mrt: Nearby MRT stations
@@ -173,7 +173,7 @@ def find_schools_near_postcode(postcode: str, radius_km: float = 2.0) -> list:
     #     {
     #         "school_name": "NATIONAL JUNIOR COLLEGE",
     #         "address": "37 HILLCREST ROAD",
-    #         "postal_code": "288913",
+    #         "postcode": "288913",
     #         "telephone": "64667755",
     #         "email": "njc@moe.edu.sg",
     #         "mrt": "Newton (NS21,DT11)",
@@ -181,18 +181,6 @@ def find_schools_near_postcode(postcode: str, radius_km: float = 2.0) -> list:
     #         "latitude": 1.3156,
     #         "longitude": 103.844,
     #         "distance_km": 0.8
-    #     },
-    #     {
-    #         "school_name": "ST. MARGARET'S SECONDARY SCHOOL",
-    #         "address": "111 FARRER ROAD",
-    #         "postal_code": "259240",
-    #         "telephone": "64745666",
-    #         "email": "stmargarets@moe.edu.sg",
-    #         "mrt": "Farrer Road (CC20)",
-    #         "bus": "48, 93, 153, 165, 174, 852",
-    #         "latitude": 1.3123,
-    #         "longitude": 103.842,
-    #         "distance_km": 1.2
     #     },
     #     ...
     # ]

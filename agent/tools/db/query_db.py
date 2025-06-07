@@ -60,7 +60,7 @@ def find_schools_near_postcode_func(postcode: str, engine, radius_km: float = 2.
             schools.append({
                 "school_name": row[0],
                 "address": row[1],
-                "postal_code": row[2],
+                "postcode": row[2],
                 "telephone": row[3],
                 "email": row[4],
                 "mrt": row[5],

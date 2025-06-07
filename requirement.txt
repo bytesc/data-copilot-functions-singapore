@@ -18,3 +18,5 @@ django-simpleui==2024.11.15
 shap == 0.47.2
 xgboost == 3.0.1
 category_encoders==2.8.1
+
+geopy==2.4.1
