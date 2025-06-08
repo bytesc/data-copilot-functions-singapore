@@ -34,20 +34,6 @@ from typing import List, Tuple, Optional, Dict, Union
 def get_minimap_func(
         markers: Optional[List[Dict[str, Union[str, Tuple[float, float]]]]] = None,
 ) -> str:
-    """
-    Generate an iframe for OneMap with customizable markers and routes.
-
-    Parameters:
-    - markers: List of marker dictionaries. Each marker can have:
-        * 'location': Either a postalcode (str) or latLng tuple (float, float) (REQUIRED)
-        * 'icon': Optional Font Awesome icon name from: 'fa-user', 'fa-mortar-board', 'fa-subway', 'fa-bus', 'fa-star'
-        * 'color': Optional color from: 'red', 'blue', 'green', 'black'
-        * 'route_type': Optional route type from: 'TRANSIT', 'WALK', 'DRIVE'
-        * 'route_dest': Optional destination for route as latLng tuple (float, float)
-
-    Returns:
-    - iframe HTML string
-    """
 
     # Valid options
     VALID_ICONS = {'fa-user', 'fa-mortar-board', 'fa-subway', 'fa-bus'}

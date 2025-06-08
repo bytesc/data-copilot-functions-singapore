@@ -60,10 +60,10 @@ def get_minimap(
     Args:
     - markers: List of marker dictionaries. Each marker can have:
         * 'location': Either a postalcode (str) or latLng tuple (float, float) (REQUIRED)
+        * 'color': color from: 'red', 'blue', 'green', 'black' (REQUIRED)
         * 'icon': Optional icon name from: 'fa-user', 'fa-mortar-board', 'fa-subway', 'fa-bus', 'fa-star'
-        * 'color': Optional color from: 'red', 'blue', 'green', 'black'
         * 'route_type': Optional route type from: 'TRANSIT', 'WALK', 'DRIVE'
-        * 'route_dest': Optional destination for route as latLng tuple (float, float) Destination point must be added as another marker!!!
+        * 'route_dest': Optional destination for route as latLng tuple (float, float) Destination point must be added as another individual marker point in the list!!!
 
     Returns:
     - str: An HTML iframe string that can be embedded in a webpage to display
@@ -73,7 +73,7 @@ def get_minimap(
     ```python
     get_minimap([{'location': (1.29203, 103.843), 'color': 'red'}])
     dest = (1.33587, 103.854)
-    get_minimap([{'location': "238889", 'icon': 'fa-bus', 'route_type': 'WALK', 'route_dest': dest}])
+    get_minimap([{'location': "238889", 'color': 'black', 'icon': 'fa-bus', 'route_type': 'WALK', 'route_dest': dest}])
     ```
 
     """
