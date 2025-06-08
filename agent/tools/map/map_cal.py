@@ -88,8 +88,8 @@ def find_preschools_in_walking_distance_func(postcode: str, engine, radius_km: f
                     'walking_distance_km': round(total_distance / 1000, 2),  # Convert to km with 2 decimal places
                     'walking_time_min': round(total_time / 60, 1)  # Convert to minutes with 1 decimal place
                 }
-
-                result.append(preschool_result)
+                if (total_distance / 1000) <= radius_km:
+                    result.append(preschool_result)
 
         except Exception as e:
             print(f"Error getting route for preschool {preschool['centre_code']}: {e}")

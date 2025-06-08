@@ -1,5 +1,5 @@
 import json
-from typing import List, Tuple, Optional
+from typing import List, Tuple, Optional, Dict, Union
 
 import pandas as pd
 from agent.utils.llm_access.LLM import get_llm
@@ -13,36 +13,71 @@ from .db.query_db import find_schools_near_postcode_func
 from .map.map_cal import find_preschools_in_walking_distance_func
 
 
-def get_minimap(lat_lng_list: Optional[List[Tuple[float, float]]] = None,
-                postcode_list: Optional[List[str]] = None) -> str:
+# def get_minimap(lat_lng_list: Optional[List[Tuple[float, float]]] = None,
+#                 postcode_list: Optional[List[str]] = None) -> str:
+#     """
+#     get_minimap(lat_lng_list: Optional[List[Tuple[float, float]]] = None, postcode_list: Optional[List[str]] = None) -> str:
+#     Generate an HTML iframe for a minimap with optional markers in latitude and longitude pairs or or postal codes.
+#     Returns an HTML iframe string.
+#
+#     The function creates an HTML iframe that embeds a minimap from OneMap.sg.
+#     Users can specify a list of latitude and longitude pairs or postal codes
+#     to be marked on the map.
+#
+#     Args:
+#     - lat_lng_list (Optional[List[Tuple[float, float]]]): A list of tuples,
+#       where each tuple contains a latitude and longitude pair for a marker.
+#       Default is None.
+#     - postcode_list (Optional[List[str]]): A list of postal codes to be marked
+#       on the map. Default is None.
+#
+#     Returns:
+#     - str: An HTML iframe string that can be embedded in a webpage to display
+#       the minimap with the specified markers.
+#
+#     Example usage:
+#     ```python
+#     get_minimap_func(lat_lng_list=[(1.2996492424497, 103.8447478575), (1.29963489170907, 103.845842317726)])
+#     get_minimap_func(postcode_list=["123456"])
+#     ```
+#
+#     """
+#     html = get_minimap_func(lat_lng_list, postcode_list)
+#     return html
+
+def get_minimap(
+        markers: Optional[List[Dict[str, Union[str, Tuple[float, float]]]]] = None
+) -> str:
     """
-    get_minimap(lat_lng_list: Optional[List[Tuple[float, float]]] = None, postcode_list: Optional[List[str]] = None) -> str:
-    Generate an HTML iframe for a minimap with optional markers in latitude and longitude pairs or or postal codes.
+    get_minimap(markers: Optional[List[Dict[str, Union[str, Tuple[float, float]]]]] = None) -> str:
+    Generate an HTML iframe for a minimap with customizable markers and routes from OneMap.sg.
     Returns an HTML iframe string.
 
-    The function creates an HTML iframe that embeds a minimap from OneMap.sg.
-    Users can specify a list of latitude and longitude pairs or postal codes
-    to be marked on the map.
+    The function creates an HTML iframe that embeds a minimap from OneMap.sg with
+    customizable markers and optional routes between them. Destination points for
+    routes must also be added as markers on the map!!!
 
     Args:
-    - lat_lng_list (Optional[List[Tuple[float, float]]]): A list of tuples,
-      where each tuple contains a latitude and longitude pair for a marker.
-      Default is None.
-    - postcode_list (Optional[List[str]]): A list of postal codes to be marked
-      on the map. Default is None.
+    - markers: List of marker dictionaries. Each marker can have:
+        * 'location': Either a postalcode (str) or latLng tuple (float, float) (REQUIRED)
+        * 'icon': Optional icon name from: 'fa-user', 'fa-mortar-board', 'fa-subway', 'fa-bus', 'fa-star'
+        * 'color': Optional color from: 'red', 'blue', 'green', 'black'
+        * 'route_type': Optional route type from: 'TRANSIT', 'WALK', 'DRIVE'
+        * 'route_dest': Optional destination for route as latLng tuple (float, float) Destination point must be added as another marker!!!
 
     Returns:
     - str: An HTML iframe string that can be embedded in a webpage to display
-      the minimap with the specified markers.
+      the minimap with the specified markers and routes.
 
-    Example usage:
+    Example usage(just example, do not use the data):
     ```python
-    get_minimap_func(lat_lng_list=[(1.2996492424497, 103.8447478575), (1.29963489170907, 103.845842317726)])
-    get_minimap_func(postcode_list=["123456"])
+    get_minimap([{'location': (1.29203, 103.843), 'color': 'red'}])
+    dest = (1.33587, 103.854)
+    get_minimap([{'location': "238889", 'icon': 'fa-bus', 'route_type': 'WALK', 'route_dest': dest}])
     ```
 
     """
-    html = get_minimap_func(lat_lng_list, postcode_list)
+    html = get_minimap_func(markers)
     return html
 
 
@@ -180,7 +215,7 @@ def find_schools_near_postcode(postcode: str, radius_km: float = 2.0) -> pd.Data
 def find_preschools_in_walking_distance(postcode: str, walking_km: float = 2.0) -> pd.DataFrame:
     """
     find_preschools_in_walking_distance(postcode: str, walking_km: float = 2.0) -> pd.DataFrame:
-    Find preschools within walking distance of a given postal code.
+    Find preschools within walking distance of a given postcode.
     Returns a pandas DataFrame containing preschool information with walking distance and time.
 
     The function first queries preschools within a straight-line distance from the specified postal code,
