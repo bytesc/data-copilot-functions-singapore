@@ -212,10 +212,10 @@ def find_schools_near_postcode(postcode: str, radius_km: float = 2.0) -> pd.Data
     return pd.DataFrame(school_list)
 
 
-def find_preschools_in_walking_distance(postcode: str, walking_km: float = 2.0) -> pd.DataFrame:
+def find_preschools_near_postcode(postcode: str, walking_km: float = 2.0) -> pd.DataFrame:
     """
-    find_preschools_in_walking_distance(postcode: str, walking_km: float = 2.0) -> pd.DataFrame:
-    Find preschools within walking distance of a given postcode.
+    find_preschools_near_postcode(postcode: str, walking_km: float = 2.0) -> pd.DataFrame:
+    Find preschools within distance of a given postcode.
     Returns a pandas DataFrame containing preschool information with walking distance and time.
 
     The function first queries preschools within a straight-line distance from the specified postal code,
@@ -238,7 +238,7 @@ def find_preschools_in_walking_distance(postcode: str, walking_km: float = 2.0) 
 
     Example usage:
     ```python
-    preschools_df = find_preschools_in_walking_distance("139951", 1.5)
+    preschools_df = find_preschools_near_postcode("139951", 1.5)
 
     # Output (pd.DataFrame):
     #            centre_name centre_code  latitude  longitude class_of_licence  ...  fees type_of_citizenship walking_distance_km walking_time_min

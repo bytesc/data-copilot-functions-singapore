@@ -54,6 +54,8 @@ Remind:
         final_prompt = question + pre_prompt + "\n" + data_prompt + end_prompt
 
         ans = call_llm(final_prompt + error_msg, llm)
+        print("sql################################3")
+        print(ans.content)
         result_sql = parse_generated_sql_code(ans.content)
         if result_sql is None:
             error_msg = """

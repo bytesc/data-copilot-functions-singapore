@@ -19,7 +19,7 @@ from .utils.pd_to_walker import pd_to_walker
 from .tools.map.population_api import get_population_api_info
 from .tools.custom_tools_def import get_api_result
 
-IMPORTANT_MODULE = ["import pandas as pd", "import math", "import numpy as np"]
+IMPORTANT_MODULE = ["import pandas as pd", "import math", "import numpy as np", "import geopy"]
 
 
 def get_cot_prompt(question):
