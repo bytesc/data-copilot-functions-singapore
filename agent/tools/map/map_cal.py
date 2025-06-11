@@ -41,20 +41,7 @@ from agent.tools.db.query_db import find_preschools_near_postcode_func, postcode
 from agent.tools.map.utils.api_call import get_api_result_func
 
 
-def find_preschools_in_walking_distance_func(postcode: str, engine, radius_km: float = 2.0):
-    """
-    Find preschools within walking distance of a given postcode with complete information.
-
-    Args:
-    - postcode (str): The postal code to search around
-    - engine: Database engine
-    - radius_km (float): Initial straight-line distance radius in kilometers (default: 2.0)
-
-    Returns:
-    - list: Preschools within walking distance, each containing all original fields plus:
-        - walking_distance_km: Actual walking distance in km
-        - walking_time_min: Estimated walking time in minutes
-    """
+def find_preschools_in_distance_func(postcode: str, engine, radius_km: float = 2.0):
     # Get preschools within initial straight-line distance
     pre_schools = find_preschools_near_postcode_func(postcode, engine, radius_km)
     latitude, longitude = postcode_to_location(postcode, engine)

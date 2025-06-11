@@ -10,7 +10,7 @@ llm = get_llm()
 from .map.get_onemap_minimap import get_minimap_func
 from .map.utils.api_call import get_api_result_func
 from .db.query_db import find_schools_near_postcode_func
-from .map.map_cal import find_preschools_in_walking_distance_func
+from .map.map_cal import find_preschools_in_distance_func
 
 
 # def get_minimap(lat_lng_list: Optional[List[Tuple[float, float]]] = None,
@@ -212,9 +212,9 @@ def find_schools_near_postcode(postcode: str, radius_km: float = 2.0) -> pd.Data
     return pd.DataFrame(school_list)
 
 
-def find_preschools_near_postcode(postcode: str, walking_km: float = 2.0) -> pd.DataFrame:
+def find_preschools_near_postcode(postcode: str, radius_km: float = 2.0) -> pd.DataFrame:
     """
-    find_preschools_near_postcode(postcode: str, walking_km: float = 2.0) -> pd.DataFrame:
+    find_preschools_near_postcode(postcode: str, radius_km: float = 2.0) -> pd.DataFrame:
     Find preschools within distance of a given postcode.
     Returns a pandas DataFrame containing preschool information with walking distance and time.
 
@@ -224,11 +224,11 @@ def find_preschools_near_postcode(postcode: str, walking_km: float = 2.0) -> pd.
 
     Args:
     - postcode (str): The postal code to search around (e.g., "123456")
-    - walking_km (float): Initial straight-line search radius in kilometers. Default is 2.0 km.
+    - radius_km (float): Search radius in kilometers. Default is 2.0 km.
 
     Returns:
     - pd.DataFrame: A DataFrame where each row contains information about
-      a preschool within walking distance. Columns include:
+      a preschool within distance. Columns include:
         - centre_name: Name of the preschool
         - centre_code: Unique code of the preschool
         - latitude: Geographic latitude
@@ -247,5 +247,5 @@ def find_preschools_near_postcode(postcode: str, walking_km: float = 2.0) -> pd.
     # [1 rows x 11 columns]
     ```
     """
-    preschool_list = find_preschools_in_walking_distance_func(postcode, engine, walking_km)
+    preschool_list = find_preschools_in_distance_func(postcode, engine, radius_km)
     return pd.DataFrame(preschool_list)
