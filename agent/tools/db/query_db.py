@@ -1,3 +1,5 @@
+import datetime
+
 import sqlalchemy
 
 
@@ -143,6 +145,99 @@ def postcode_to_location(postcode: str, engine):
 
     except Exception as e:
         print(e)
+        raise e
+    finally:
+        conn.close()
+
+
+def get_hdb_info_by_postcode(postcode: str, engine):
+    """
+    Retrieve HDB information by postcode including plan area, flat type, model, street name,
+    floor area, lease commence date, and calculate remaining lease.
+
+    Args:
+        postcode (str): The postal code to search for
+        engine: SQLAlchemy database engine
+
+    Returns:
+        dict: A dictionary containing HDB information or None if not found
+    """
+    conn = engine.connect()
+    try:
+        # First get the block number and street from the hdb table
+        hdb_result = conn.execute(sqlalchemy.text("""
+            SELECT blk_no, street FROM hdb WHERE postcode = :postcode
+        """), {'postcode': postcode})
+
+        hdb_info = hdb_result.fetchone()
+        if not hdb_info:
+            return None
+
+        blk_no, street = hdb_info
+
+        # Then get additional details from resale_flat_prices
+        resale_result = conn.execute(sqlalchemy.text("""
+            SELECT 
+                planarea, 
+                flat_type, 
+                flat_model, 
+                street, 
+                floor_area_sqm, 
+                lease_commence_date
+            FROM resale_flat_prices
+            WHERE blk_no = :blk_no AND street = :street
+            ORDER BY month DESC
+            LIMIT 1
+        """), {'blk_no': blk_no, 'street': street})
+
+        resale_info = resale_result.fetchone()
+        if not resale_info:
+            # return None
+            # return {
+            #     'blk_no': blk_no,
+            #     'street_name': street,
+            #     'message': 'Basic address information found but no resale data available'
+            # }
+            return {
+                'planarea': "",
+                'flat_type': "",
+                'flat_model': "",
+                'street_name': street,
+                'floor_area_sqm': 84,
+                'lease_commence_date': "",
+                'remaining_lease': "",
+                'blk_no': blk_no,
+            }
+
+        # Unpack the result
+        (planarea, flat_type, flat_model, street_name,
+         floor_area_sqm, lease_commence_date) = resale_info
+
+        # Calculate remaining lease (HDB lease is typically 99 years)
+        current_year = datetime.datetime.now().year
+        lease_years_passed = current_year - lease_commence_date
+        remaining_lease_years = 99 - lease_years_passed
+        remaining_lease_months = 12 - datetime.datetime.now().month
+
+        # Format remaining lease string
+        if remaining_lease_months == 12:
+            remaining_lease_years += 1
+            remaining_lease_months = 0
+        remaining_lease = f"{remaining_lease_years} years {remaining_lease_months} months"
+
+        return {
+            'planarea': planarea,
+            'flat_type': flat_type,
+            'flat_model': flat_model,
+            'street_name': street_name,
+            'floor_area_sqm': floor_area_sqm,
+            'lease_commence_date': str(lease_commence_date),
+            'remaining_lease': remaining_lease,
+            'blk_no': blk_no,
+        }
+
+    except Exception as e:
+        print(f"Error retrieving HDB info: {e}")
         raise e
     finally:
         conn.close()

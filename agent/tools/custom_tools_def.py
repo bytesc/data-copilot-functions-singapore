@@ -9,7 +9,7 @@ llm = get_llm()
 
 from .map.get_onemap_minimap import get_minimap_func
 from .map.utils.api_call import get_api_result_func
-from .db.query_db import find_schools_near_postcode_func
+from .db.query_db import find_schools_near_postcode_func, get_hdb_info_by_postcode
 from .map.map_cal import find_preschools_in_distance_func
 
 
@@ -104,12 +104,12 @@ def get_api_result(url: str) -> dict | list:
 
 
 from .prediction.Model_Deploy3 import predict_house_price
-def house_price_prediction_model(month="", storey_range="", town="",
+def house_price_prediction_model(month="", storey_range="", planarea="",
                                  flat_type="", flat_model="",
-                                 street_name="", floor_area_sqm=1,
+                                 street_name="", floor_area_sqm=84,
                                  lease_commence_date="", remaining_lease="") -> float:
     """
-    house_price_prediction_model(month="", storey_range="", town="", flat_type="", flat_model="", street_name="", floor_area_sqm=1, lease_commence_date="", remaining_lease="") -> float:
+    house_price_prediction_model(month="", storey_range="", planarea="", flat_type="", flat_model="", street_name="", floor_area_sqm=1, lease_commence_date="", remaining_lease="") -> float:
     Predict the price of an HDB flat based on various property features.
     Returns the predicted price as a float value.
 
@@ -120,11 +120,11 @@ def house_price_prediction_model(month="", storey_range="", town="",
     Args:
     - month (str): Transaction month in "YYYY-MM" format. Default is empty string.
     - storey_range (str): Original floor range (e.g., "04 to 06"). Default is empty string.
-    - town (str): Town where the flat is located. Default is empty string.
+    - planarea (str): Planarea where the flat is located. Default is empty string.
     - flat_type (str): Type of flat (e.g., "4-room"). Default is empty string.
     - flat_model (str): Model of flat (e.g., "Simplified"). Default is empty string.
     - street_name (str): Fine-grained location information. Default is empty string.
-    - floor_area_sqm (float): Floor area in square meters. Default is 1.
+    - floor_area_sqm (float): Floor area in square meters. Default is 84.
     - lease_commence_date (str): Year lease commenced (e.g., "1985"). Default is empty string.
     - remaining_lease (str): Remaining lease duration (e.g., "59 years 11 months"). Default is empty string.
 
@@ -136,7 +136,7 @@ def house_price_prediction_model(month="", storey_range="", town="",
     price = house_price_prediction_model(
         month="2025-01",
         storey_range="04 to 06",
-        town="YISHUN",
+        planarea="YISHUN",
         flat_type="4-room",
         flat_model="Simplified",
         street_name="ANG MO KIO AVE 10",
@@ -149,7 +149,7 @@ def house_price_prediction_model(month="", storey_range="", town="",
     sample_input = {
         "month": month,  # Transaction month
         "storey_range": storey_range,  # Original floor range
-        "town": town,  # Town (provided here; if missing, will be replaced with "unknown")
+        "town": planarea,  # Town (provided here; if missing, will be replaced with "unknown")
         "flat_type": flat_type,
         "flat_model": flat_model,
         "street_name": street_name,  # Fine-grained location info
@@ -176,7 +176,7 @@ def find_schools_near_postcode(postcode: str, radius_km: float = 2.0) -> pd.Data
     """
     find_schools_near_postcode(postcode: str, radius_km: float = 2.0) -> pd.DataFrame:
     Find schools near a given postal code within a specified radius.
-    Returns a pandas DataFrame containing school information.
+    Returns a pandas DataFrame containing school information. return None if not found.
 
     The function queries a database to find schools located within a certain distance
     (in kilometers) from the specified postal code. Each school's information includes
@@ -216,7 +216,7 @@ def find_preschools_near_postcode(postcode: str, radius_km: float = 2.0) -> pd.D
     """
     find_preschools_near_postcode(postcode: str, radius_km: float = 2.0) -> pd.DataFrame:
     Find preschools within distance of a given postcode.
-    Returns a pandas DataFrame containing preschool information with walking distance and time.
+    Returns a pandas DataFrame containing preschool information with walking distance and time. return None if not found.
 
     The function first queries preschools within a straight-line distance from the specified postal code,
     then calculates actual walking routes to determine precise walking distances and times.
@@ -249,3 +249,55 @@ def find_preschools_near_postcode(postcode: str, radius_km: float = 2.0) -> pd.D
     """
     preschool_list = find_preschools_in_distance_func(postcode, engine, radius_km)
     return pd.DataFrame(preschool_list)
+
+
+def get_hdb_info_with_postcode(postcode: str) -> dict:
+    """
+    get_hdb_info_with_postcode(postcode: str) -> dict:
+    Retrieve HDB (Housing Development Board) information for a given postal code.
+    Returns a dictionary containing comprehensive details about the HDB flat. return None if not found.
+
+    The function first queries basic address information from the HDB database,
+    then supplements it with the latest resale transaction data including
+    flat characteristics and lease information. For leases, it calculates
+    the remaining lease period based on standard 99-year HDB leases.
+
+    If the user provide different information, follow the user's instruction and replace the returned result.
+
+    Args:
+    - postcode (str): The postal code to search for (e.g., "123456")
+
+    Returns:
+    - dict: A dictionary containing HDB information with the following keys:
+        - planarea: Planning area of the HDB flat
+        - flat_type: Type of flat (e.g., 3-room, 4-room)
+        - flat_model: Model of the flat
+        - street_name: Name of the street
+        - floor_area_sqm: Floor area in square meters
+        - lease_commence_date: Year when lease commenced
+        - remaining_lease: String representing remaining lease duration
+        - blk_no: Block number
+
+        If no resale data is found, returns basic address information with
+        a message indicating limited data availability.
+
+    Example usage:
+    ```python
+    hdb_info = get_hdb_info_by_postcode("139951", engine)
+
+    # Output (dict):
+    # {
+    #     'planarea': 'BUKIT MERAH',
+    #     'flat_type': '3 ROOM',
+    #     'flat_model': 'New Generation',
+    #     'street_name': 'REDHILL CLOSE',
+    #     'floor_area_sqm': 67.0,
+    #     'lease_commence_date': '1974',
+    #     'remaining_lease': '50 years 6 months',
+    #     'blk_no': '89',
+    # }
+    ```
+    """
+    # example 750404
+    hdb_info = get_hdb_info_by_postcode(postcode, engine)
+    return hdb_info

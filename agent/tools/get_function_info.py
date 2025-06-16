@@ -1,6 +1,7 @@
 from .copilot.utils.call_llm_test import call_llm
 from .tools_def import draw_graph, query_database
-from .custom_tools_def import get_minimap, get_api_result, find_schools_near_postcode, find_preschools_near_postcode
+from .custom_tools_def import get_minimap, get_api_result, find_schools_near_postcode, find_preschools_near_postcode, \
+    get_hdb_info_with_postcode
 from .custom_tools_def import  house_price_prediction_model
 
 FUNCTION_DICT = {
@@ -9,6 +10,7 @@ FUNCTION_DICT = {
     "get_minimap": get_minimap,
     "get_api_result": get_api_result,
     "house_price_prediction_model": house_price_prediction_model,
+    "get_hdb_info_with_postcode": get_hdb_info_with_postcode,
     # "find_schools_near_postcode": find_schools_near_postcode,
     # "find_preschools_in_walking_distance": find_preschools_near_postcode
 }
@@ -21,10 +23,11 @@ FUNCTION_IMPORT = {
     house_price_prediction_model: "from agent.tools.custom_tools_def import house_price_prediction_model",
     find_schools_near_postcode: "from agent.tools.custom_tools_def import find_schools_near_postcode",
     find_preschools_near_postcode: "from agent.tools.custom_tools_def import find_preschools_near_postcode",
+    get_hdb_info_with_postcode: "from agent.tools.custom_tools_def import get_hdb_info_with_postcode",
 }
 
 ASSIST_FUNCTION_DICT = {
-    # predict_grade_for_stu: [from_username_to_uid, from_lesson_name_to_lesson_num],
+    house_price_prediction_model: [get_hdb_info_with_postcode],
 }
 
 IMPORTANT_FUNC = ["query_database", "get_api_result"]
