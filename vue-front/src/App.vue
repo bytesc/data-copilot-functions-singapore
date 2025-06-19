@@ -23,9 +23,9 @@ const handleSelect = (key: string) => {
   else if (key === '5') {
     router.push('/system');
   }
-  // else if (key === '6') {
-  //   router.push('/setting');
-  // }
+  else if (key === '6') {
+    router.push('/setting');
+  }
 }
 
 // Set active index based on current route
@@ -41,7 +41,7 @@ onMounted(() => {
     '/api': '3',
     '/functions': '4',
     '/system': '5',
-    // '/setting': '6'
+    '/setting': '6'
   };
 
   activeIndex.value = pathToIndexMap[route.path] || '1';
@@ -65,7 +65,7 @@ onMounted(() => {
       <el-menu-item index="3">API</el-menu-item>
       <el-menu-item index="4">Functions</el-menu-item>
       <el-menu-item index="5">System</el-menu-item>
-<!--      <el-menu-item index="6">Setting</el-menu-item>-->
+      <el-menu-item index="6">Setting</el-menu-item>
       <div class="flex-grow" />
     </el-menu>
   </el-header>
