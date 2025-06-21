@@ -10,9 +10,9 @@ FUNCTION_DICT = {
     "get_minimap": get_minimap,
     "get_api_result": get_api_result,
     "house_price_prediction_model": house_price_prediction_model,
+    "find_schools_near_postcode": find_schools_near_postcode,
+    "find_preschools_near_postcode": find_preschools_near_postcode,
     "get_hdb_info_with_postcode": get_hdb_info_with_postcode,
-    # "find_schools_near_postcode": find_schools_near_postcode,
-    # "find_preschools_in_walking_distance": find_preschools_near_postcode
 }
 
 FUNCTION_IMPORT = {

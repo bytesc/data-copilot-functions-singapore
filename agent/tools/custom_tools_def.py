@@ -241,8 +241,8 @@ def find_preschools_near_postcode(postcode: str, radius_km: float = 2.0) -> pd.D
     preschools_df = find_preschools_near_postcode("139951", 1.5)
 
     # Output (pd.DataFrame):
-    #            centre_name centre_code  latitude  longitude class_of_licence  ...  fees type_of_citizenship walking_distance_km walking_time_min
-    # 0  KIDZ MEADOW CHILDCARE     PC-0001    1.2345   103.4567         Full Day  ...  $800-$1200               All                 0.8             10.5
+    #            centre_name centre_code  latitude  longitude  walking_distance_km walking_time_min
+    # 0  KIDZ MEADOW CHILDCARE     PC-0001    1.2345   103.4567        0.8             10.5
     #
     # [1 rows x 11 columns]
     ```
