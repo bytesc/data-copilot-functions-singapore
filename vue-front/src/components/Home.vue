@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref,reactive,computed } from 'vue'
+import { ref,reactive,computed, nextTick} from 'vue'
 import {Box, ChatDotRound, CloseBold, Coin, Files, House, Plus, Refrigerator, Tickets, Select} from "@element-plus/icons-vue";
 import MarkdownIt from 'markdown-it';
 
@@ -34,6 +34,26 @@ const chatLogs = ref([]);
 
 // 聊天记录
 const chat= ref([]);
+
+const scrollToBottom = () => {
+  nextTick(() => {
+    const container = document.querySelector('.chat-container')
+    if (container) {
+      container.scrollTo({
+        top: container.scrollHeight,
+        behavior: 'smooth'
+      })
+    }
+
+    const logContainer = document.querySelector('.chat-log-container')
+    if (logContainer) {
+      logContainer.scrollTo({
+        top: logContainer.scrollHeight,
+        behavior: 'smooth'
+      })
+    }
+  })
+}
 
 // 获取聊天数据的方法
 // const getChatDataFromAgent = async () => {
@@ -206,6 +226,7 @@ const onSubmit = async () => {
   if (Question.content.trim()) {
     await getCotChatFromAgent();
     Question.content = '';
+    scrollToBottom();
   }
 }
 
@@ -213,6 +234,7 @@ const onExe = async () => {
   if (Question.content.trim() || Cot.content.trim()) {
     await getChatDataFromAgent();
     Question.content = '';
+    scrollToBottom();
   }
 };
 </script>
@@ -405,13 +427,13 @@ iframe {
 }
 
 .chat-container {
-  max-height: 800px; /* Adjust this value as needed */
+  height: 600px;
   overflow-y: auto;
   padding-right: 8px; /* Prevents content from touching scrollbar */
 }
 
 .chat-log-container{
-  max-height: 600px;
+  height: 400px;
 }
 
 /* Custom scrollbar styling (optional) */
