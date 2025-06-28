@@ -67,8 +67,8 @@ def find_schools_near_postcode_func(postcode: str, engine, radius_km: float = 2.
                 "email": row[4],
                 # "mrt": row[5],
                 # "bus": row[6],
-                # "latitude": row[7],
-                # "longitude": row[8],
+                "latitude": row[7],
+                "longitude": row[8],
                 "distance_km": row[9]
             })
 
@@ -105,7 +105,7 @@ def find_preschools_near_postcode_func(postcode: str, engine, radius_km: float =
                 pl.latitude BETWEEN pc.latitude - :radius_deg AND pc.latitude + :radius_deg
                 AND pl.longitude BETWEEN pc.longitude - :radius_deg AND pc.longitude + :radius_deg
             ORDER BY distance_km
-            LIMIT 50
+            LIMIT 20
         """), {
             'postcode': postcode,
             'radius_deg': radius_deg,

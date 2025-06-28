@@ -194,6 +194,8 @@ def find_schools_near_postcode(postcode: str, radius_km: float = 2.0) -> pd.Data
         - postcode: Postcode of the school
         - telephone: Contact telephone number
         - email: Email address
+        - latitude: Geographic latitude
+        - longitude: Geographic longitude
         - distance_km: Distance from the input postcode in kilometers
 
     Example usage:
@@ -201,9 +203,9 @@ def find_schools_near_postcode(postcode: str, radius_km: float = 2.0) -> pd.Data
     schools_df = find_schools_near_postcode("139951", 1.5)
 
     # Output (pd.DataFrame):
-    #                             school_name            address postcode telephone            email  distance_km
-    # 0               NATIONAL JUNIOR COLLEGE  37 HILLCREST ROAD  288913  64667755  njc@moe.edu.sg          0.8
-    # 1  ANGLO-CHINESE SCHOOL (INDEPENDENT)     121 DOVER ROAD   138650  67731611  acsind@acs.edu.sg         1.2
+    #                             school_name            address postcode telephone     email   latitude    longitude   distance_km
+    # 0               NATIONAL JUNIOR COLLEGE  37 HILLCREST ROAD  288913  64667755  njc@moe.edu.sg  1.2345  103.4567   0.8
+    # 1  ANGLO-CHINESE SCHOOL (INDEPENDENT)     121 DOVER ROAD   138650  67731611  acsind@acs.edu.sg    1.2345  103.4567    1.2
     #
     # [2 rows x 6 columns]
     ```
