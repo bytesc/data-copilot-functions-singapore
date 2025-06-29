@@ -7,6 +7,8 @@
 **Data Source**: [OneMap API](https://www.onemap.gov.sg/docs/)  
 Contains postal addresses with building details, postal codes, and geographic coordinates.
 
+[🔍🗃️VIEW DATA SIMPLE](#table-singapore_postcode)
+
 **Fields**:
 - `blk_no`: Building block number (e.g., "101A")
 - `street`: Road name (e.g., "LORONG 7 TOA PAYOH")
@@ -19,6 +21,8 @@ Contains postal addresses with building details, postal codes, and geographic co
 ### Postcode to Subzone Mapping Dataset
 **Data Source**: [URA API](https://www.ura.gov.sg/maps/api/)  
 Maps postal codes to subzones and planning areas.
+
+[🔍🗃️VIEW DATA SIMPLE](#table-postcode_subzone)
 
 **Fields**:
 - `PostCode`: 6-digit postal code
@@ -33,6 +37,8 @@ Maps postal codes to subzones and planning areas.
 **Data Source**: [Data.gov.sg](https://data.gov.sg/datasets?query=HDB+resale+transactions)  
 Historical resale transaction records.
 
+[🔍🗃️VIEW DATA SIMPLE](#table-resale_flat_prices)
+
 **Key Fields**:
 - `month`: Transaction date (YYYY-MM)
 - `town`: Planning area
@@ -40,19 +46,12 @@ Historical resale transaction records.
 - `blk_no`, `street`: Location details
 - `resale_price`: Transaction price (SGD)
 
-### HDB Property Information Dataset
-**Data Source**: [Data.gov.sg](https://data.gov.sg/dataset/hdb-property-information)  
-Building details including facilities and unit composition.
-
-**Key Fields**:
-- `year_completed`: Construction completion year
-- `residential/commercial`: Unit types (Y/N)
-- `total_dwelling_units`: Total residential units
-- Room type counts (e.g., `3room_sold`, `4room_sold`)
 
 ### HDB Postcode Mapping Dataset
 **Data Source**: [OneMap](https://www.onemap.gov.sg/)  
 Maps HDB blocks to postal codes and coordinates.
+
+[🔍🗃️VIEW DATA SIMPLE](#table-hdb)
 
 **Fields**: `blk_no`, `street`, `PostCode`, `LATITUDE`, `LONGITUDE`
 
@@ -64,6 +63,8 @@ Maps HDB blocks to postal codes and coordinates.
 **Data Source**: [Data.gov.sg](https://data.gov.sg/datasets?query=MRT+location)  
 Station exit locations with coordinates.
 
+[🔍🗃️VIEW DATA SIMPLE](#table-mrt_lrt_station)
+
 **Fields**:
 - `station_name`: Station name
 - `exit_code`: Exit identifier (e.g., "Exit A")
@@ -72,6 +73,8 @@ Station exit locations with coordinates.
 ### Bus Stop Locations Dataset
 **Data Source**: [LTA DataMall](https://datamall.lta.gov.sg/)  
 All bus stop locations in Singapore.
+
+[🔍🗃️VIEW DATA SIMPLE](#table-bus_stop)
 
 **Fields**:
 - `bus_stop_n`: Unique stop code
@@ -86,6 +89,8 @@ All bus stop locations in Singapore.
 **Data Source**: [Data.gov.sg](https://data.gov.sg/dataset/school-directory)  
 Comprehensive school details.
 
+[🔍🗃️VIEW DATA SIMPLE](#table-school)
+
 **Key Fields**:
 - `school_name`, `address`, `postal_code`
 - `mrt_desc`, `bus_desc`: Nearby transport
@@ -96,11 +101,15 @@ Comprehensive school details.
 **Data Source**: [Data.gov.sg](https://data.gov.sg/dataset/child-care-centres)  
 Child care center locations.
 
+[🔍🗃️VIEW DATA SIMPLE](#table-preschool_location)
+
 **Fields**: `centre_name`, `centre_code`, `latitude`, `longitude`
 
 ### School CCAs Dataset
 **Data Source**: [Data.gov.sg](https://data.gov.sg/collections/457/view)  
 Co-curricular activities by school.
+
+[🔍🗃️VIEW DATA SIMPLE](#table-school_ccas)
 
 **Fields**:
 - `cca_grouping`: Category (e.g., "PHYSICAL SPORTS")

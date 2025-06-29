@@ -30,7 +30,7 @@
 
   <div class="db-data-container">
     <div v-for="(tableData, tableName) in ans" :key="tableName" class="table-section">
-      <div class="table-header" @click="toggleTable(tableName)">
+      <div class="table-header" @click="toggleTable(tableName)" :id="'table-' + tableName">
         <h3>{{ formatTableName(tableName) }}</h3>
         <span class="toggle-icon">{{ expandedTables[tableName] ? '−' : '+' }}</span>
       </div>
@@ -103,7 +103,7 @@ const getDbData = async () => {
 
     // Initialize all tables as collapsed by default
     Object.keys(response.ans).forEach(tableName => {
-      expandedTables.value[tableName] = false;
+      expandedTables.value[tableName] = true;
     });
 
   } catch (error) {
