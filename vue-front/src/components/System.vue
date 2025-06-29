@@ -3,23 +3,43 @@
 <!--    <img src="../assets/data-map.svg" alt="Database structure diagram">-->
 <!--  </div>-->
 
-
-  <div class="info-image-container">
-    <img src="../assets/info.png" alt="sys structure" class="info-image">
+  <div class="markdown-container">
+    <div class="markdown-content" v-html="md.render(compDocsContent)"></div>
   </div>
+
+
+
 
 <!--  <div class="markdown-container">-->
 <!--    <div class="markdown-content" v-html="md.render(markdownContent)"></div>-->
 <!--  </div>-->
   <div class="markdown-container">
-    <div class="markdown-header" @click="toggleMarkdown">
-      <h3>Documentation</h3>
-      <span class="toggle-icon">{{ showMarkdown ? '−' : '+' }}</span>
-    </div>
-    <div v-if="showMarkdown" class="markdown-content" v-html="md.render(markdownContent)"></div>
+    <div class="markdown-content" v-html="md.render(marketDocsContent)"></div>
+  </div>
+  <div class="info-image-container">
+    <img src="../assets/system/market.png" alt="sys structure" class="info-image">
   </div>
 
+  <div class="markdown-container">
+    <div class="markdown-content" v-html="md.render(solutionDocsContent)"></div>
+  </div>
+  <div class="info-image-container">
+    <img src="../assets/system/info.png" alt="sys structure" class="info-image">
+  </div>
 
+  <div class="markdown-container">
+    <div class="markdown-content" v-html="md.render(techDocsContent)"></div>
+  </div>
+  <div class="info-image-container">
+    <img src="../assets/system/tech.png" alt="sys structure" class="info-image">
+  </div>
+
+  <div class="markdown-container">
+    <div class="markdown-content" v-html="md.render(flowDocsContent)"></div>
+  </div>
+  <div class="info-image-container">
+    <img src="../assets/system/flow.png" alt="sys structure" class="info-image">
+  </div>
 
 </template>
 
@@ -29,7 +49,12 @@ import { requestPack } from "../utils/requests.js";
 
 import MarkdownIt from 'markdown-it';
 
-import docsContent from '../assets/docs.md?raw';
+import docsContent from '../assets/system/docs.md?raw';
+import marketDocsContent from '../assets/system/market.md?raw';
+import solutionDocsContent from '../assets/system/solution.md?raw';
+import techDocsContent from '../assets/system/tech.md?raw';
+import flowDocsContent from '../assets/system/flow.md?raw';
+import compDocsContent from '../assets/system/comp.md?raw';
 
 // Initialize markdown parser
 const md = new MarkdownIt({
