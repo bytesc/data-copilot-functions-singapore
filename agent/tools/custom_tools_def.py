@@ -2,9 +2,13 @@ import json
 from typing import List, Tuple, Optional, Dict, Union
 
 import pandas as pd
-from agent.utils.llm_access.LLM import get_llm
+from matplotlib import pyplot as plt
 
-from .tools_def import  engine
+from agent.utils.llm_access.LLM import get_llm
+from .copilot.examples.path_tools import generate_img_path
+
+from .tools_def import engine, STATIC_URL
+
 llm = get_llm()
 
 from .map.get_onemap_minimap import get_minimap_func
@@ -104,21 +108,20 @@ def get_api_result(url: str) -> dict | list:
 
 
 from .prediction.Model_Deploy3 import predict_house_price
-def house_price_prediction_model(month="", storey_range="", planarea="",
-                                 flat_type="", flat_model="",
-                                 street_name="", floor_area_sqm=84,
-                                 lease_commence_date="", remaining_lease="") -> float:
-    """
-    house_price_prediction_model(month="", storey_range="", planarea="", flat_type="", flat_model="", street_name="", floor_area_sqm=1, lease_commence_date="", remaining_lease="") -> float:
-    Predict the price of an HDB flat based on various property features.
-    Returns the predicted price as a float value.
 
-    The function uses a pre-trained machine learning model to estimate the price
-    of an HDB flat given its characteristics. All parameters are optional with
-    default values, but providing more accurate information will yield better predictions.
+
+def house_price_prediction_model(from_date: str, to_date: str, storey_range="", planarea="",
+                                       flat_type="", flat_model="", street_name="",
+                                       floor_area_sqm=84, lease_commence_date="",
+                                       remaining_lease="") -> tuple[pd.DataFrame, str]:
+    """
+    def house_price_prediction_model(from_date: str, to_date: str, storey_range="", planarea="",flat_type="", flat_model="", street_name="", floor_area_sqm=84, lease_commence_date="", remaining_lease="") ->  tuple[pd.DataFrame, str]:
+    Predict HDB flat prices for a date range based on various property features.
+    Returns a DataFrame with predicted prices for each month in the range, sorted by date.
 
     Args:
-    - month (str): Transaction month in "YYYY-MM" format. Default is empty string.
+    - from_date (str): Start date in "YYYY-MM" format.
+    - to_date (str): End date in "YYYY-MM" format.
     - storey_range (str): Original floor range (e.g., "04 to 06"). Default is empty string.
     - planarea (str): Planarea where the flat is located. Default is empty string.
     - flat_type (str): Type of flat (e.g., "4-room"). Default is empty string.
@@ -129,12 +132,13 @@ def house_price_prediction_model(month="", storey_range="", planarea="",
     - remaining_lease (str): Remaining lease duration (e.g., "59 years 11 months"). Default is empty string.
 
     Returns:
-    - float: The predicted price of the HDB flat.
+    - pd.DataFrame: A DataFrame with columns 'month' and 'predicted_price', sorted by month.
 
     Example usage:
     ```python
-    price = house_price_prediction_model(
-        month="2025-01",
+    price_df, img_path = house_price_prediction_model_range(
+        from_date="2025-01",
+        to_date="2025-12",
         storey_range="04 to 06",
         planarea="YISHUN",
         flat_type="4-room",
@@ -144,32 +148,54 @@ def house_price_prediction_model(month="", storey_range="", planarea="",
         lease_commence_date="1985",
         remaining_lease="59 years 11 months"
     )
+    yield price_df
+    # Output:
+    #     month  predicted_price
+    # 0  2025-01      450000.0
+    # 1  2025-02      452000.0
+    # 2  2025-03      455000.0
+    #   ...     ...
     ```
+    yield img_path
     """
-    sample_input = {
-        "month": month,  # Transaction month
-        "storey_range": storey_range,  # Original floor range
-        "town": planarea,  # Town (provided here; if missing, will be replaced with "unknown")
-        "flat_type": flat_type,
-        "flat_model": flat_model,
-        "street_name": street_name,  # Fine-grained location info
-        "floor_area_sqm": floor_area_sqm,
-        "lease_commence_date": lease_commence_date,
-        "remaining_lease": remaining_lease
-    }
-    # sample_input = {
-    #     "month": "2025-01",  # Transaction month
-    #     "storey_range": "04 to 06",  # Original floor range
-    #     "town": "YISHUN",  # Town (provided here; if missing, will be replaced with "unknown")
-    #     "flat_type": "4-room",
-    #     "flat_model": "Simplified",
-    #     "street_name": "ANG MO KIO AVE 10",  # Fine-grained location info
-    #     "floor_area_sqm": 84,
-    #     "lease_commence_date": "1985",
-    #     "remaining_lease": "59 years 11 months"
-    # }
-    pred, features_used, processed = predict_house_price(sample_input)
-    return pred[0]
+    # Generate monthly date range
+    date_range = pd.date_range(start=from_date, end=to_date, freq='MS').strftime("%Y-%m")
+    predictions = []
+    for month in date_range:
+        sample_input = {
+            "month": month,
+            "storey_range": storey_range,
+            "town": planarea,
+            "flat_type": flat_type,
+            "flat_model": flat_model,
+            "street_name": street_name,
+            "floor_area_sqm": floor_area_sqm,
+            "lease_commence_date": lease_commence_date,
+            "remaining_lease": remaining_lease
+        }
+        pred, features_used, processed = predict_house_price(sample_input)
+        predictions.append({
+            "month": month,
+            "predicted_price": pred[0]
+        })
+    # Create DataFrame and sort by month
+    result_df = pd.DataFrame(predictions)
+    result_df = result_df.sort_values("month")
+
+    path = generate_img_path()
+
+    plt.figure(figsize=(10, 6))
+    plt.plot(result_df['month'], result_df['predicted_price'], marker='o', linestyle='-', color='b')
+    plt.title(f'HDB Price Prediction Trend\n{from_date} to {to_date}')
+    plt.xlabel('Month')
+    plt.ylabel('Predicted Price (SGD)')
+    plt.xticks(rotation=45)
+    plt.grid(True)
+    plt.tight_layout()
+    plt.savefig(path, dpi=300, bbox_inches='tight')
+    plt.close()
+
+    return result_df, STATIC_URL + path[2:]
 
 
 def find_schools_near_postcode(postcode: str, radius_km: float = 2.0) -> pd.DataFrame:
@@ -201,7 +227,7 @@ def find_schools_near_postcode(postcode: str, radius_km: float = 2.0) -> pd.Data
     Example usage:
     ```python
     schools_df = find_schools_near_postcode("139951", 1.5)
-
+    yield schools_df
     # Output (pd.DataFrame):
     #                             school_name            address postcode telephone     email   latitude    longitude   distance_km
     # 0               NATIONAL JUNIOR COLLEGE  37 HILLCREST ROAD  288913  64667755  njc@moe.edu.sg  1.2345  103.4567   0.8
@@ -242,6 +268,7 @@ def find_preschools_near_postcode(postcode: str, radius_km: float = 2.0) -> pd.D
     ```python
     preschools_df = find_preschools_near_postcode("139951", 1.5)
 
+    yield preschools_df
     # Output (pd.DataFrame):
     #            centre_name centre_code  latitude  longitude  walking_distance_km walking_time_min
     # 0  KIDZ MEADOW CHILDCARE     PC-0001    1.2345   103.4567        0.8             10.5
@@ -287,6 +314,7 @@ def get_hdb_info_with_postcode(postcode: str) -> dict:
     ```python
     hdb_info = get_hdb_info_by_postcode("139951", engine)
 
+    yield hdb_info
     # Output (dict):
     # {
     #     'planarea': 'BUKIT MERAH',
