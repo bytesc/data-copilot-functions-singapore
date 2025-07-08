@@ -72,7 +72,7 @@ I need you to clarify .....
 
     cot_prompt = "question:" + question + knowledge + database + pre_prompt + \
                  function_prompt + str(function_info) + \
-                 api_prompt + str(api_info)+ example_ans
+                 api_prompt + str(api_info) + example_ans
     return cot_prompt, rag_ans, function_import
 
 

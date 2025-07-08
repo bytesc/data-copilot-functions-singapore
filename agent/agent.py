@@ -22,7 +22,7 @@ from .tools.custom_tools_def import get_api_result
 IMPORTANT_MODULE = ["import pandas as pd", "import math", "import numpy as np", "import geopy"]
 
 
-def get_cot_prompt(question):
+def get_cot_code_prompt(question):
     data_prompt = get_db_info_prompt(engine, simple=True)
     # rag_ans = rag_from_policy_func(question,llm,engine)
     rag_ans = ""
@@ -90,7 +90,7 @@ def cot_agent(question, retries=2, print_rows=10):
     exp = None
     for i in range(3):
         html_map = ""
-        cot_prompt, rag_ans, function_import = get_cot_prompt(question)
+        cot_prompt, rag_ans, function_import = get_cot_code_prompt(question)
         print(rag_ans)
         # print(cot_prompt)
         if cot_prompt == "solved":
@@ -186,7 +186,7 @@ def exe_cot_code(code, retries=2, print_rows=10):
 
 
 def get_cot_code(question, retries=2):
-    cot_prompt, rag_ans, function_import = get_cot_prompt(question)
+    cot_prompt, rag_ans, function_import = get_cot_code_prompt(question)
     print(rag_ans)
     # print(cot_prompt)
     if cot_prompt == "solved":
