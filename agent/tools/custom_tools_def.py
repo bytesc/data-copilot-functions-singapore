@@ -116,8 +116,8 @@ def house_price_prediction_model(from_date: str, to_date: str, storey_range="", 
                                        remaining_lease="") -> tuple[pd.DataFrame, str]:
     """
     def house_price_prediction_model(from_date: str, to_date: str, storey_range="", planarea="",flat_type="", flat_model="", street_name="", floor_area_sqm=84, lease_commence_date="", remaining_lease="") ->  tuple[pd.DataFrame, str]:
-    Predict HDB flat prices for a date range based on various property features.
-    Returns a DataFrame with predicted prices for each month in the range, sorted by date.
+    Predict HDB flat prices for a date range based on various property features. The function is used to predict a specific hbd, it only works well if most of the parameters are provided!!!
+    Returns a DataFrame with predicted prices for each month in the range, sorted by date and an image path of graph.
 
     Args:
     - from_date (str): Start date in "YYYY-MM" format.
@@ -133,6 +133,7 @@ def house_price_prediction_model(from_date: str, to_date: str, storey_range="", 
 
     Returns:
     - pd.DataFrame: A DataFrame with columns 'month' and 'predicted_price', sorted by month.
+    - str: A string image path of line graph
 
     Example usage:
     ```python

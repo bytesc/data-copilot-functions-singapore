@@ -241,3 +241,4 @@ def get_hdb_info_by_postcode(postcode: str, engine):
         raise e
     finally:
         conn.close()
+
