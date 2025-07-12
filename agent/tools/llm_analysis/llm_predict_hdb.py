@@ -64,8 +64,8 @@ def query_resale_flats(engine, month=None, plan_area=None, flat_type=None, blk_n
 
         result = conn.execute(sqlalchemy.text(query), params)
 
-        # Return all rows as a list of dictionaries
-        return [dict(row) for row in result]
+        columns = result.keys()
+        return [dict(zip(columns, row)) for row in result]
 
     except Exception as e:
         print(e)
@@ -104,6 +104,19 @@ def get_llm_predict_hdb_info(engine, plan_area=None, flat_type=None, blk_no=None
         'lease_commence_date_to': lease_commence_date_to,
     }
     search_conditions = {k: v for k, v in search_conditions.items() if v is not None}
+
+    for record in hdb_price_history:
+        if 'month' in record and record['month']:
+            if isinstance(record['month'], str):
+                try:
+                    from datetime import datetime
+                    dt = datetime.strptime(record['month'], '%Y-%m-%d')
+                    record['month'] = dt.strftime('%Y-%m')
+                except ValueError:
+                    pass
+            else:
+                record['month'] = record['month'].strftime('%Y-%m')
+    hdb_price_history = sorted(hdb_price_history, key=lambda x: x['month'])
 
     if len(hdb_price_history) > 50:
         monthly_data = {}
@@ -199,7 +212,6 @@ def llm_predict_hdb_func(engine, llm, from_date: str, to_date: str, plan_area=No
     )
 
     prompt = get_llm_predict_hdb_prompt(from_date, to_date, search_conditions, hdb_price_history)
-
     ans = call_llm(prompt, llm)
     ans = ans.content
 

@@ -1,7 +1,7 @@
 from .copilot.utils.call_llm_test import call_llm
 from .tools_def import draw_graph, query_database
 from .custom_tools_def import get_minimap, get_api_result, find_schools_near_postcode, find_preschools_near_postcode, \
-    get_hdb_info_with_postcode
+    get_hdb_info_with_postcode, predict_hdb_price
 from .custom_tools_def import  house_price_prediction_model
 
 FUNCTION_DICT = {
@@ -10,6 +10,7 @@ FUNCTION_DICT = {
     "get_minimap": get_minimap,
     "get_api_result": get_api_result,
     "house_price_prediction_model": house_price_prediction_model,
+    "predict_hdb_price": predict_hdb_price,
     "find_schools_near_postcode": find_schools_near_postcode,
     "find_preschools_near_postcode": find_preschools_near_postcode,
     "get_hdb_info_with_postcode": get_hdb_info_with_postcode,
@@ -24,13 +25,14 @@ FUNCTION_IMPORT = {
     find_schools_near_postcode: "from agent.tools.custom_tools_def import find_schools_near_postcode",
     find_preschools_near_postcode: "from agent.tools.custom_tools_def import find_preschools_near_postcode",
     get_hdb_info_with_postcode: "from agent.tools.custom_tools_def import get_hdb_info_with_postcode",
+    predict_hdb_price: "from agent.tools.custom_tools_def import predict_hdb_price"
 }
 
 ASSIST_FUNCTION_DICT = {
     house_price_prediction_model: [get_hdb_info_with_postcode],
 }
 
-IMPORTANT_FUNC = ["query_database", "get_api_result"]
+IMPORTANT_FUNC = []  # ["query_database"]
 
 # FUNCTION_INFO = {key: func.__doc__ for key, func in FUNCTION_DICT.items()}
 # ASSIST_FUNCTION_INFO = {key: ' '.join(func.__doc__ for func in funcs) for key, funcs in ASSIST_FUNCTION_DICT.items()}

@@ -2,8 +2,7 @@
 import logging
 
 
-from .tools.tools_def import engine, llm
-
+from .tools.tools_def import engine, llm, query_database
 
 from .tools.copilot.sql_code import get_db_info_prompt
 
@@ -17,13 +16,12 @@ from .tools.custom_tools_def import get_api_result
 
 
 def get_cot_chat_prompt(question):
-    data_prompt = get_db_info_prompt(engine, simple=True)
     # rag_ans = rag_from_policy_func(question,llm,engine)
     rag_ans = ""
     # print(rag_ans)
 
     knowledge = "\nBase knowledge: \n" + rag_ans + "\n"
-    database = "\nThe database content: \n" + data_prompt + "\n"
+    database = ""
 
     function_set, function_info, function_import = get_function_info(question, llm)
     # print(function_info)
@@ -38,7 +36,10 @@ def get_cot_chat_prompt(question):
         api_prompt = f""" 
         Here is the APIs you can call with the provided function:
         """
-        print(api_info)
+
+    if query_database in function_set:
+        data_prompt = get_db_info_prompt(engine, simple=True)
+        database = "\nThe database content: \n" + data_prompt + "\n"
 
     pre_prompt = """ 
 

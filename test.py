@@ -1,3 +1,4 @@
+from agent.tools.custom_tools_def import predict_hdb_price
 from agent.tools.map.population_api import get_api_select_prompt
 # get_api_select_prompt("q")
 # from agent.tools.custom_tools_def import get_api_result
@@ -18,3 +19,5 @@ from agent.tools.map.population_api import get_api_select_prompt
 # STATIC_URL = config_data['static_path']
 #
 # llm = get_llm()
+df,path = predict_hdb_price(from_date="2026-01", to_date="2027-01", plan_area="ANG MO KIO", flat_type="3 ROOM")
+print(df,path)

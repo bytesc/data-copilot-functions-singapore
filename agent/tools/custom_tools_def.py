@@ -6,6 +6,7 @@ from matplotlib import pyplot as plt
 
 from agent.utils.llm_access.LLM import get_llm
 from .copilot.examples.path_tools import generate_img_path
+from .llm_analysis.llm_predict_hdb import llm_predict_hdb_func, get_llm_predict_hdb_info
 
 from .tools_def import engine, STATIC_URL
 
@@ -111,12 +112,12 @@ from .prediction.Model_Deploy3 import predict_house_price
 
 
 def house_price_prediction_model(from_date: str, to_date: str, storey_range="", planarea="",
-                                       flat_type="", flat_model="", street_name="",
-                                       floor_area_sqm=84, lease_commence_date="",
-                                       remaining_lease="") -> tuple[pd.DataFrame, str]:
+                                 flat_type="", flat_model="", street_name="",
+                                 floor_area_sqm=84, lease_commence_date="",
+                                 remaining_lease="") -> tuple[pd.DataFrame, str]:
     """
     def house_price_prediction_model(from_date: str, to_date: str, storey_range="", planarea="",flat_type="", flat_model="", street_name="", floor_area_sqm=84, lease_commence_date="", remaining_lease="") ->  tuple[pd.DataFrame, str]:
-    Predict HDB flat prices for a date range based on various property features. The function is used to predict a specific hbd, it only works well if most of the parameters are provided!!!
+    Predict HDB flat prices for a date range based on various property features. The function is used to predict a specific hbd not hbd with features, it only works well if most of the parameters are provided!!!
     Returns a DataFrame with predicted prices for each month in the range, sorted by date and an image path of graph.
 
     Args:
@@ -156,8 +157,8 @@ def house_price_prediction_model(from_date: str, to_date: str, storey_range="", 
     # 1  2025-02      452000.0
     # 2  2025-03      455000.0
     #   ...     ...
-    ```
     yield img_path
+    ```
     """
     # Generate monthly date range
     date_range = pd.date_range(start=from_date, end=to_date, freq='MS').strftime("%Y-%m")
@@ -332,3 +333,112 @@ def get_hdb_info_with_postcode(postcode: str) -> dict:
     # example 750404
     hdb_info = get_hdb_info_by_postcode(postcode, engine)
     return hdb_info
+
+
+def predict_hdb_price(from_date: str, to_date: str, plan_area=None, blk_no=None, street=None,
+                      flat_model=None, flat_type=None, storey_range=None,
+                      floor_area_sqm_from=None, floor_area_sqm_to=None,
+                      lease_commence_date_from=None, lease_commence_date_to=None) -> tuple[pd.DataFrame, str]:
+    """
+def predict_hdb_price(from_date: str, to_date: str, plan_area=None, blk_no=None, street=None,flat_model=None, flat_type=None, storey_range=None,floor_area_sqm_from=None, floor_area_sqm_to=None,lease_commence_date_from=None, lease_commence_date_to=None) -> tuple[pd.DataFrame, str]:
+Predict HDB resale prices for a date range based on various property features. The function is used to predict a kind of hdb with certain features, it works well even only some of the parameters provided!!!
+The function returns both predicted prices dataFrame and a path of image of historical vs predicted prices.
+
+Args:
+- from_date (str): Start date for prediction in "YYYY-MM" format.
+- to_date (str): End date for prediction in "YYYY-MM" format.
+- plan_area (str, optional): Planning area where the flat is located (e.g., "ANG MO KIO").
+- blk_no (str, optional): Block number of the HDB flat.
+- street (str, optional): Street name where the flat is located (e.g., "ANG MO KIO AVENUE 1").
+- flat_model (str, optional): Model of flat (e.g., "IMPROVED", "NEW GENERATION").
+- flat_type (str, optional): Type of flat (e.g., "1 ROOM", "3 ROOM").
+- storey_range (str, optional): Storey range (e.g., "04 TO 06", "10 TO 12").
+- floor_area_sqm_from (float, optional): Minimum floor area in square meters for filtering.
+- floor_area_sqm_to (float, optional): Maximum floor area in square meters for filtering.
+- lease_commence_date_from (int, optional): Minimum lease commence year for filtering.
+- lease_commence_date_to (int, optional): Maximum lease commence year for filtering.
+
+Returns:
+- pd.DataFrame: A DataFrame containing predicted prices with columns:
+    * 'month': Prediction month in "YYYY-MM" format
+    * 'predicted_price': Predicted resale price in SGD
+- str: File path to the generated visualization image showing historical and predicted prices
+
+Example usage:
+```python
+price_df, img_path = predict_hdb_price(
+    from_date="2025-01",
+    to_date="2025-12",
+    plan_area="ANG MO KIO",
+    flat_type="3 ROOM",
+    flat_model="NEW GENERATION",
+    street="ANG MO KIO AVENUE 1",
+    storey_range="04 TO 06",
+    floor_area_sqm_from=65,
+    floor_area_sqm_to=75,
+    lease_commence_date_from=1975,
+    lease_commence_date_to=1980
+)
+yield price_df
+    # Output:
+    #     month  predicted_price
+    # 0  2025-01      450000.0
+    # 1  2025-02      452000.0
+    # 2  2025-03      455000.0
+    #   ...     ...
+yield img_path
+```
+    """
+    predict_df = llm_predict_hdb_func(engine=engine, llm=llm, from_date=from_date, to_date=to_date,
+                                      plan_area=plan_area, blk_no=blk_no, street=street,
+                                      flat_model=flat_model, flat_type=flat_type, storey_range=storey_range,
+                                      floor_area_sqm_from=floor_area_sqm_from, floor_area_sqm_to=floor_area_sqm_to,
+                                      lease_commence_date_from=lease_commence_date_from,
+                                      lease_commence_date_to=lease_commence_date_to)
+    search_conditions, hdb_price_history = get_llm_predict_hdb_info(engine,
+                                                                    plan_area=plan_area, blk_no=blk_no, street=street,
+                                                                    flat_model=flat_model, flat_type=flat_type,
+                                                                    storey_range=storey_range,
+                                                                    floor_area_sqm_from=floor_area_sqm_from,
+                                                                    floor_area_sqm_to=floor_area_sqm_to,
+                                                                    lease_commence_date_from=lease_commence_date_from,
+                                                                    lease_commence_date_to=lease_commence_date_to)
+    path = generate_img_path()
+
+    import matplotlib.pyplot as plt
+    import pandas as pd
+    from matplotlib.dates import AutoDateLocator, ConciseDateFormatter
+
+    # Convert to datetime for proper plotting
+    history_df = pd.DataFrame(hdb_price_history)
+    history_df['month'] = pd.to_datetime(history_df['month'])
+    predict_df['month'] = pd.to_datetime(predict_df['month'])
+
+    plt.figure(figsize=(12, 6))
+    ax = plt.gca()
+
+    if 'avg_resale_price' in history_df.columns:
+        plt.plot(history_df['month'], history_df['avg_resale_price'],
+                 label='Historical Average Price', marker='o', color='blue')
+    elif 'resale_price' in history_df.columns:
+        plt.plot(history_df['month'], history_df['resale_price'],
+                 label='Historical Price', marker='o', color='blue')
+
+    plt.plot(predict_df['month'], predict_df['predicted_price'],
+             label='Predicted Price', linestyle='--', marker='x', color='red')
+
+    # Smart date formatting
+    locator = AutoDateLocator()
+    formatter = ConciseDateFormatter(locator)
+    ax.xaxis.set_major_locator(locator)
+    ax.xaxis.set_major_formatter(formatter)
+
+    plt.xlabel('Date')
+    plt.ylabel('Price (SGD)')
+    plt.title('HDB Resale Price History and Prediction')
+    plt.legend()
+    plt.grid(True)
+    plt.tight_layout()
+    plt.savefig(path)
+    plt.close()
+    return predict_df, STATIC_URL + path[2:]
