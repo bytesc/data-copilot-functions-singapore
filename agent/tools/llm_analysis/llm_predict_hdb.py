@@ -75,8 +75,10 @@ def query_resale_flats(engine, month=None, plan_area=None, flat_type=None, blk_n
 
 
 def get_llm_predict_hdb_info(engine, plan_area=None, flat_type=None, blk_no=None,
-                             street=None, storey_range=None, floor_area_sqm_from=None, floor_area_sqm_to=None,
-                             flat_model=None, lease_commence_date_from=None, lease_commence_date_to=None):
+                             street=None, storey_range=None, floor_area_sqm_from=None,
+                             floor_area_sqm_to=None, flat_model=None,
+                             lease_commence_date_from=None, lease_commence_date_to=None):
+
     hdb_price_history = query_resale_flats(
         engine,
         plan_area=plan_area,
@@ -105,6 +107,7 @@ def get_llm_predict_hdb_info(engine, plan_area=None, flat_type=None, blk_no=None
     }
     search_conditions = {k: v for k, v in search_conditions.items() if v is not None}
 
+    # Format month to YYYY-MM and sort chronologically
     for record in hdb_price_history:
         if 'month' in record and record['month']:
             if isinstance(record['month'], str):
@@ -117,6 +120,8 @@ def get_llm_predict_hdb_info(engine, plan_area=None, flat_type=None, blk_no=None
             else:
                 record['month'] = record['month'].strftime('%Y-%m')
     hdb_price_history = sorted(hdb_price_history, key=lambda x: x['month'])
+    averaged_data = []
+    sampled_data = None
 
     if len(hdb_price_history) > 50:
         monthly_data = {}
@@ -132,6 +137,8 @@ def get_llm_predict_hdb_info(engine, plan_area=None, flat_type=None, blk_no=None
             monthly_data[month]['total_price'] += price
             monthly_data[month]['count'] += 1
             monthly_data[month]['records'].append(record)
+
+        # Create averaged data
         averaged_data = []
         for month, data in monthly_data.items():
             avg_price = data['total_price'] / data['count']
@@ -142,10 +149,19 @@ def get_llm_predict_hdb_info(engine, plan_area=None, flat_type=None, blk_no=None
             }
             averaged_data.append(result_record)
 
-        return search_conditions, averaged_data
+        if len(averaged_data) > 50:
+            sampled_data = []
+            for record in averaged_data:
+                month = record['month']
+                # Check for Q1, Q2, Q3, Q4 months (Jan, Apr, Jul, Oct)
+                if month.endswith(('-01', '-04', '-07', '-10')):
+                    sampled_data.append(record)
 
+            return search_conditions, averaged_data, sampled_data
+
+        return search_conditions, averaged_data, averaged_data  # sampled_data is None when not reduced
     else:
-        return search_conditions, hdb_price_history
+        return search_conditions, hdb_price_history, hdb_price_history  # No averaging or sampling needed
 
 
 from .utils.call_llm_test import call_llm
@@ -197,7 +213,7 @@ def llm_predict_hdb_func(engine, llm, from_date: str, to_date: str, plan_area=No
                          floor_area_sqm_from=None, floor_area_sqm_to=None,
                          lease_commence_date_from=None, lease_commence_date_to=None):
     # First get the historical data and search conditions
-    search_conditions, hdb_price_history = get_llm_predict_hdb_info(
+    search_conditions, hdb_price_history, sample = get_llm_predict_hdb_info(
         engine,
         plan_area=plan_area,
         flat_type=flat_type,
@@ -211,7 +227,7 @@ def llm_predict_hdb_func(engine, llm, from_date: str, to_date: str, plan_area=No
         lease_commence_date_to=lease_commence_date_to
     )
 
-    prompt = get_llm_predict_hdb_prompt(from_date, to_date, search_conditions, hdb_price_history)
+    prompt = get_llm_predict_hdb_prompt(from_date, to_date, search_conditions, sample)
     ans = call_llm(prompt, llm)
     ans = ans.content
 

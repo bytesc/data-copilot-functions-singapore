@@ -395,14 +395,15 @@ yield img_path
                                       floor_area_sqm_from=floor_area_sqm_from, floor_area_sqm_to=floor_area_sqm_to,
                                       lease_commence_date_from=lease_commence_date_from,
                                       lease_commence_date_to=lease_commence_date_to)
-    search_conditions, hdb_price_history = get_llm_predict_hdb_info(engine,
-                                                                    plan_area=plan_area, blk_no=blk_no, street=street,
-                                                                    flat_model=flat_model, flat_type=flat_type,
-                                                                    storey_range=storey_range,
-                                                                    floor_area_sqm_from=floor_area_sqm_from,
-                                                                    floor_area_sqm_to=floor_area_sqm_to,
-                                                                    lease_commence_date_from=lease_commence_date_from,
-                                                                    lease_commence_date_to=lease_commence_date_to)
+    search_conditions, hdb_price_history, sample = get_llm_predict_hdb_info(engine,
+                                                                            plan_area=plan_area, blk_no=blk_no,
+                                                                            street=street,
+                                                                            flat_model=flat_model, flat_type=flat_type,
+                                                                            storey_range=storey_range,
+                                                                            floor_area_sqm_from=floor_area_sqm_from,
+                                                                            floor_area_sqm_to=floor_area_sqm_to,
+                                                                            lease_commence_date_from=lease_commence_date_from,
+                                                                            lease_commence_date_to=lease_commence_date_to)
     path = generate_img_path()
 
     import matplotlib.pyplot as plt
