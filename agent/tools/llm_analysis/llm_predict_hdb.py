@@ -201,8 +201,7 @@ Based on the historical price data and search conditions provided, predict the r
     {"month": "2023-02", "predicted_price": 452000.0},
     ...
 ]
-
-Now provide your predictions in the exact JSON format specified above.
+# Only return the result json without any explanation or comments!!!
 """
     prompt = pre_prompt+date_prompt+search_prompt+history_prompt+end_prompt
     return prompt
@@ -234,10 +233,15 @@ def llm_predict_hdb_func(engine, llm, from_date: str, to_date: str, plan_area=No
     try:
         import json
         import pandas as pd
-        predictions = json.loads(ans)
+        import re
+
+        json_str = ans.strip()
+        code_block_match = re.search(r'```(?:json)?\n(.*?)\n```', json_str, re.DOTALL)
+        if code_block_match:
+            json_str = code_block_match.group(1)
+        predictions = json.loads(json_str)
         df = pd.DataFrame(predictions)
         df = df.sort_values('month')
-
         return df
 
     except Exception as e:
