@@ -99,23 +99,24 @@ for index, row in df.iterrows():
         month_date = datetime.strptime(row['month'], '%Y-%m').date()
         processed_street = process_street_name(row['street_name'])
 
-        # Check if row exists
-        sql_check = check_query % (
-            month_date,
-            row['town'],
-            row['flat_type'],
-            row['block'],
-            processed_street,
-            row['storey_range'],
-            int(row['floor_area_sqm']),
-            row['flat_model'],
-            int(row['lease_commence_date']),
-            int(row['resale_price'])
-        )
-
-        result = execute_select(engine, sql_check)
-
-        if not result.empty:
+        # # Check if row exists
+        # sql_check = check_query % (
+        #     month_date,
+        #     row['town'],
+        #     row['flat_type'],
+        #     row['block'],
+        #     processed_street,
+        #     row['storey_range'],
+        #     int(row['floor_area_sqm']),
+        #     row['flat_model'],
+        #     int(row['lease_commence_date']),
+        #     int(row['resale_price'])
+        # )
+        #
+        # result = execute_select(engine, sql_check)
+        #
+        # if not result.empty:
+        if 1:
             # Row doesn't exist, insert it
             sql_insert = insert_query % (
                 month_date,
@@ -131,7 +132,7 @@ for index, row in df.iterrows():
             )
             execute_sql(engine, sql_insert)
             print(i)
-            i+=1
+            i += 1
 
     except Exception as e:
         print(f"Error processing row {index}: {e}")
