@@ -123,7 +123,7 @@ def get_llm_predict_hdb_info(engine, plan_area=None, flat_type=None, blk_no=None
     averaged_data = []
     sampled_data = None
 
-    if len(hdb_price_history) > 50:
+    if len(hdb_price_history) > 100:
         monthly_data = {}
         for record in hdb_price_history:
             month = record['month']
@@ -149,7 +149,7 @@ def get_llm_predict_hdb_info(engine, plan_area=None, flat_type=None, blk_no=None
             }
             averaged_data.append(result_record)
 
-        if len(averaged_data) > 50:
+        if len(averaged_data) > 100:
             sampled_data = []
             for record in averaged_data:
                 month = record['month']
@@ -190,10 +190,11 @@ Based on the historical price data and search conditions provided, predict the r
 1. Analyze the historical price trends considering factors like location, flat type, size, etc.
 2. Predict the resale price for each month in the specified date range.
 3. Consider typical market trends, seasonality, and any relevant economic factors.
-4. Return your predictions in JSON format with an array of objects, each containing:
+4. Please consider price fluctuations and cyclical characteristics to simulate real-market scenarios.
+5. Return your predictions in JSON format with an array of objects, each containing:
    - "month": in "yyyy-mm" format
    - "predicted_price": as a float value
-5. Only return the result json without any explanation or comments!!!
+6. Only return the result json without any explanation or comments!!!
 
 ### Output Format Example:
 [
