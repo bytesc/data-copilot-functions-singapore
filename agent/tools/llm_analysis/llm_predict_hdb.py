@@ -74,6 +74,22 @@ def query_resale_flats(engine, month=None, plan_area=None, flat_type=None, blk_n
         conn.close()
 
 
+def query_latest_month(engine):
+    conn = engine.connect()
+    try:
+        # 查询最大的month值（最新日期）
+        query = "SELECT MAX(month) AS latest_month FROM resale_flat_prices"
+        result = conn.execute(sqlalchemy.text(query))
+        latest_month = result.scalar()
+        return latest_month
+
+    except Exception as e:
+        print(f"Error querying latest month: {e}")
+        raise e
+    finally:
+        conn.close()
+
+
 def get_llm_predict_hdb_info(engine, plan_area=None, flat_type=None, blk_no=None,
                              street=None, storey_range=None, floor_area_sqm_from=None,
                              floor_area_sqm_to=None, flat_model=None,
@@ -123,7 +139,7 @@ def get_llm_predict_hdb_info(engine, plan_area=None, flat_type=None, blk_no=None
     averaged_data = []
     sampled_data = None
 
-    if len(hdb_price_history) > 100:
+    if len(hdb_price_history) > 50:
         monthly_data = {}
         for record in hdb_price_history:
             month = record['month']
@@ -149,7 +165,7 @@ def get_llm_predict_hdb_info(engine, plan_area=None, flat_type=None, blk_no=None
             }
             averaged_data.append(result_record)
 
-        if len(averaged_data) > 100:
+        if len(averaged_data) > 50:
             sampled_data = []
             for record in averaged_data:
                 month = record['month']
@@ -157,9 +173,9 @@ def get_llm_predict_hdb_info(engine, plan_area=None, flat_type=None, blk_no=None
                 if month.endswith(('-01', '-04', '-07', '-10')):
                     sampled_data.append(record)
 
-            return search_conditions, averaged_data, sampled_data
+            return search_conditions, hdb_price_history, sampled_data
 
-        return search_conditions, averaged_data, averaged_data  # sampled_data is None when not reduced
+        return search_conditions, hdb_price_history, averaged_data  # sampled_data is None when not reduced
     else:
         return search_conditions, hdb_price_history, hdb_price_history  # No averaging or sampling needed
 
@@ -208,7 +224,8 @@ Based on the historical price data and search conditions provided, predict the r
     return prompt
 
 
-def llm_predict_hdb_func(engine, llm, from_date: str, to_date: str, plan_area=None, blk_no=None, street=None,
+def llm_predict_hdb_func(engine, llm, from_date: str = None, to_date: str = None,
+                         plan_area=None, blk_no=None, street=None,
                          flat_model=None, flat_type=None, storey_range=None,
                          floor_area_sqm_from=None, floor_area_sqm_to=None,
                          lease_commence_date_from=None, lease_commence_date_to=None):
@@ -226,6 +243,25 @@ def llm_predict_hdb_func(engine, llm, from_date: str, to_date: str, plan_area=No
         lease_commence_date_from=lease_commence_date_from,
         lease_commence_date_to=lease_commence_date_to
     )
+
+    if from_date is None:
+        latest_month = query_latest_month(engine).strftime("%Y-%m")
+        year, month = map(int, latest_month.split('-'))
+        if month == 12:
+            year += 1
+            month = 1
+        else:
+            month += 1
+        from_date = f"{year}-{month:02d}"
+
+    if to_date is None:
+        year, month = map(int, from_date.split('-'))
+        to_date = f"{year + 1}-{month:02d}"
+    else:
+        from_year, from_month = map(int, from_date.split('-'))
+        to_year, to_month = map(int, to_date.split('-'))
+        if (to_year < from_year) or (to_year == from_year and to_month <= from_month):
+            to_date = f"{from_year + 1}-{from_month:02d}"
 
     prompt = get_llm_predict_hdb_prompt(from_date, to_date, search_conditions, sample)
     ans = call_llm(prompt, llm)

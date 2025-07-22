@@ -335,7 +335,7 @@ def get_hdb_info_with_postcode(postcode: str) -> dict:
     return hdb_info
 
 
-def predict_hdb_price(from_date: str, to_date: str, plan_area=None, blk_no=None, street=None,
+def predict_hdb_price(from_date: str = None, to_date: str = None, plan_area=None, blk_no=None, street=None,
                       flat_model=None, flat_type=None, storey_range=None,
                       floor_area_sqm_from=None, floor_area_sqm_to=None,
                       lease_commence_date_from=None, lease_commence_date_to=None) -> tuple[pd.DataFrame, str]:
@@ -345,8 +345,8 @@ Predict HDB resale prices for a date range based on various property features. T
 The function returns both predicted prices dataFrame and a path of image of historical vs predicted prices.
 
 Args:
-- from_date (str): Start date for prediction in "YYYY-MM" format.
-- to_date (str): End date for prediction in "YYYY-MM" format.
+- from_date (str, optional): Start date for prediction in "YYYY-MM" format.
+- to_date (str, optional): End date for prediction in "YYYY-MM" format.
 - plan_area (str, optional): Planning area where the flat is located (e.g., "ANG MO KIO").
 - blk_no (str, optional): Block number of the HDB flat.
 - street (str, optional): Street name where the flat is located (e.g., "ANG MO KIO AVENUE 1").
@@ -418,13 +418,35 @@ yield img_path
     plt.figure(figsize=(12, 6))
     ax = plt.gca()
 
+    # Plot historical data as scatter points
     if 'avg_resale_price' in history_df.columns:
-        plt.plot(history_df['month'], history_df['avg_resale_price'],
-                 label='Historical Average Price', marker='o', color='blue')
+        plt.scatter(history_df['month'], history_df['avg_resale_price'],
+                    label='Historical Data Points', color='blue', alpha=0.6)
+        y_values = history_df['avg_resale_price']
     elif 'resale_price' in history_df.columns:
-        plt.plot(history_df['month'], history_df['resale_price'],
-                 label='Historical Price', marker='o', color='blue')
+        plt.scatter(history_df['month'], history_df['resale_price'],
+                    label='Historical Data Points', color='blue', alpha=0.6)
+        y_values = history_df['resale_price']
 
+    # Create smoothed curve (using moving average)
+    if len(history_df) > 1:
+        # Sort by date first
+        history_df = history_df.sort_values('month')
+        # Calculate rolling average with window size based on data length
+        window_size = max(2, min(6, len(history_df) // 3))
+        smooth_df = history_df.copy()
+        if 'avg_resale_price' in smooth_df.columns:
+            smooth_df['smoothed'] = smooth_df['avg_resale_price'].rolling(window=window_size, center=True).mean()
+        else:
+            smooth_df['smoothed'] = smooth_df['resale_price'].rolling(window=window_size, center=True).mean()
+
+        # Interpolate any NaN values at the ends
+        smooth_df['smoothed'] = smooth_df['smoothed'].interpolate()
+
+        plt.plot(smooth_df['month'], smooth_df['smoothed'],
+                 label='Historical Trend', color='green', linewidth=2)
+
+    # Plot predicted prices
     plt.plot(predict_df['month'], predict_df['predicted_price'],
              label='Predicted Price', linestyle='--', marker='x', color='red')
 
@@ -438,8 +460,42 @@ yield img_path
     plt.ylabel('Price (SGD)')
     plt.title('HDB Resale Price History and Prediction')
     plt.legend()
-    plt.grid(True)
+    plt.grid(True, alpha=0.3)
     plt.tight_layout()
     plt.savefig(path)
     plt.close()
+
+    # # Convert to datetime for proper plotting
+    # history_df = pd.DataFrame(hdb_price_history)
+    # history_df['month'] = pd.to_datetime(history_df['month'])
+    # predict_df['month'] = pd.to_datetime(predict_df['month'])
+    #
+    # plt.figure(figsize=(12, 6))
+    # ax = plt.gca()
+    #
+    # if 'avg_resale_price' in history_df.columns:
+    #     plt.plot(history_df['month'], history_df['avg_resale_price'],
+    #              label='Historical Average Price', marker='o', color='blue')
+    # elif 'resale_price' in history_df.columns:
+    #     plt.plot(history_df['month'], history_df['resale_price'],
+    #              label='Historical Price', marker='o', color='blue')
+    #
+    # plt.plot(predict_df['month'], predict_df['predicted_price'],
+    #          label='Predicted Price', linestyle='--', marker='x', color='red')
+    #
+    # # Smart date formatting
+    # locator = AutoDateLocator()
+    # formatter = ConciseDateFormatter(locator)
+    # ax.xaxis.set_major_locator(locator)
+    # ax.xaxis.set_major_formatter(formatter)
+    #
+    # plt.xlabel('Date')
+    # plt.ylabel('Price (SGD)')
+    # plt.title('HDB Resale Price History and Prediction')
+    # plt.legend()
+    # plt.grid(True)
+    # plt.tight_layout()
+    # plt.savefig(path)
+    # plt.close()
+
     return predict_df, STATIC_URL + path[2:]
