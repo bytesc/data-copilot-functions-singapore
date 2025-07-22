@@ -462,7 +462,7 @@ yield img_path
 
     # Plot predicted prices
     plt.plot(predict_df['month'], predict_df['predicted_price'],
-             label='Predicted Price', linestyle='--', color='red')
+             label='Predicted Price', linestyle='-', color='red')
 
     # Smart date formatting
     locator = AutoDateLocator()
