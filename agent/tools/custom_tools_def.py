@@ -443,12 +443,26 @@ yield img_path
         # Interpolate any NaN values at the ends
         smooth_df['smoothed'] = smooth_df['smoothed'].interpolate()
 
+        # Plot the historical trend line
         plt.plot(smooth_df['month'], smooth_df['smoothed'],
                  label='Historical Trend', color='green', linewidth=2)
 
+        # Get the last historical point for connection
+        last_historical_date = smooth_df['month'].iloc[-1]
+        last_historical_price = smooth_df['smoothed'].iloc[-1]
+
+        # Get the first predicted point
+        first_predicted_date = predict_df['month'].iloc[0]
+        first_predicted_price = predict_df['predicted_price'].iloc[0]
+
+        # Plot connecting line between historical and predicted
+        plt.plot([last_historical_date, first_predicted_date],
+                 [last_historical_price, first_predicted_price],
+                 color='green', linestyle='--', alpha=0.5)
+
     # Plot predicted prices
     plt.plot(predict_df['month'], predict_df['predicted_price'],
-             label='Predicted Price', linestyle='--', marker='x', color='red')
+             label='Predicted Price', linestyle='--', color='red')
 
     # Smart date formatting
     locator = AutoDateLocator()

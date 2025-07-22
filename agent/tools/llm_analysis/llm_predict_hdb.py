@@ -206,7 +206,10 @@ Based on the historical price data and search conditions provided, predict the r
 1. Analyze the historical price trends considering factors like location, flat type, size, etc.
 2. Predict the resale price for each month in the specified date range.
 3. Consider typical market trends, seasonality, and any relevant economic factors.
-4. Please consider price fluctuations and cyclical characteristics to simulate real-market scenarios.
+4. Please consider price fluctuations and cyclical characteristics to simulate real-market scenarios, do not predict a straight line!!!
+The prediction result must have unpredictable swings and irregular fluctuations!!! 
+The prediction must have obvious oscillation and erratic volatility!!!
+
 5. Return your predictions in JSON format with an array of objects, each containing:
    - "month": in "yyyy-mm" format
    - "predicted_price": as a float value
@@ -218,6 +221,8 @@ Based on the historical price data and search conditions provided, predict the r
     {"month": "2023-02", "predicted_price": 452000.0},
     ...
 ]
+# The prediction result must have unpredictable swings and irregular fluctuations!!! 
+# The prediction must have obvious oscillation and erratic volatility!!!
 # Only return the result json without any explanation or comments!!!
 """
     prompt = pre_prompt+date_prompt+search_prompt+history_prompt+end_prompt
