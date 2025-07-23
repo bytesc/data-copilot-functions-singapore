@@ -340,8 +340,8 @@ def predict_hdb_price(from_date: str = None, to_date: str = None, plan_area=None
                       floor_area_sqm_from=None, floor_area_sqm_to=None,
                       lease_commence_date_from=None, lease_commence_date_to=None) -> tuple[pd.DataFrame, str]:
     """
-def predict_hdb_price(from_date: str, to_date: str, plan_area=None, blk_no=None, street=None,flat_model=None, flat_type=None, storey_range=None,floor_area_sqm_from=None, floor_area_sqm_to=None,lease_commence_date_from=None, lease_commence_date_to=None) -> tuple[pd.DataFrame, str]:
-Predict HDB resale prices for a date range based on various property features. The function is used to predict a kind of hdb with certain features, it works well even only some of the parameters provided!!!
+def predict_hdb_price(from_date: str = None, to_date: str = None, plan_area=None, blk_no=None, street=None,flat_model=None, flat_type=None, storey_range=None,floor_area_sqm_from=None, floor_area_sqm_to=None,lease_commence_date_from=None, lease_commence_date_to=None) -> tuple[pd.DataFrame, str]:
+Predict HDB resale prices based on various property features. The function is used to predict a kind of hdb with certain features, it works well even only some of the parameters provided!!!
 The function returns both predicted prices dataFrame and a path of image of historical vs predicted prices.
 
 Args:
