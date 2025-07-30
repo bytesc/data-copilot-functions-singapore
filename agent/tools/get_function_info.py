@@ -10,8 +10,8 @@ FUNCTION_DICT = {
     "get_minimap": get_minimap,
     "get_api_result": get_api_result,
     "house_price_prediction_model": house_price_prediction_model,
-    "predict_hdb_price": predict_hdb_price,
     "find_schools_near_postcode": find_schools_near_postcode,
+    "predict_hdb_price": predict_hdb_price,
     "find_preschools_near_postcode": find_preschools_near_postcode,
     "get_hdb_info_with_postcode": get_hdb_info_with_postcode,
 }

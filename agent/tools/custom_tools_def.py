@@ -117,7 +117,7 @@ def house_price_prediction_model(from_date: str, to_date: str, storey_range="", 
                                  remaining_lease="") -> tuple[pd.DataFrame, str]:
     """
     def house_price_prediction_model(from_date: str, to_date: str, storey_range="", planarea="",flat_type="", flat_model="", street_name="", floor_area_sqm=84, lease_commence_date="", remaining_lease="") ->  tuple[pd.DataFrame, str]:
-    Predict HDB flat prices for a date range based on various property features. The function is used to predict a specific hbd not hbd with features, it only works well if most of the parameters are provided!!!
+    Predict HDB flat prices for a date range using a pretrained AI model based on various property features. The function is used to predict a specific hbd, it only works well if most of the parameters are provided!!!
     Returns a DataFrame with predicted prices for each month in the range, sorted by date and an image path of graph.
 
     Args:
@@ -282,10 +282,12 @@ def find_preschools_near_postcode(postcode: str, radius_km: float = 2.0) -> pd.D
     return pd.DataFrame(preschool_list)
 
 
-def get_hdb_info_with_postcode(postcode: str) -> dict:
+def get_hdb_info_with_postcode(postcode: str, storey_range="",
+                               flat_type="", flat_model="",
+                               floor_area_sqm=0, lease_commence_date="") -> dict:
     """
-    get_hdb_info_with_postcode(postcode: str) -> dict:
-    Retrieve HDB (Housing Development Board) information for a given postal code.
+    def get_hdb_info_with_postcode(postcode: str, storey_range="", flat_type="", flat_model="", floor_area_sqm=0, lease_commence_date="") -> dict:
+    Retrieve HDB information for a given postal code and various property features.
     Returns a dictionary containing comprehensive details about the HDB flat. return None if not found.
 
     The function first queries basic address information from the HDB database,
@@ -297,6 +299,11 @@ def get_hdb_info_with_postcode(postcode: str) -> dict:
 
     Args:
     - postcode (str): The postal code to search for (e.g., "123456")
+    - storey_range (str): Original floor range (e.g., "04 to 06"). Default is empty string.
+    - flat_type (str): Type of flat (e.g., "4-room"). Default is empty string.
+    - flat_model (str): Model of flat (e.g., "Simplified"). Default is empty string.
+    - floor_area_sqm (float): Floor area in square meters. Default is 0.
+    - lease_commence_date (str): Year lease commenced (e.g., "1985"). Default is empty string.
 
     Returns:
     - dict: A dictionary containing HDB information with the following keys:
@@ -331,7 +338,9 @@ def get_hdb_info_with_postcode(postcode: str) -> dict:
     ```
     """
     # example 750404
-    hdb_info = get_hdb_info_by_postcode(postcode, engine)
+    hdb_info = get_hdb_info_by_postcode(engine, postcode, storey_range,
+                                        flat_type, flat_model,
+                                        floor_area_sqm, lease_commence_date)
     return hdb_info
 
 
@@ -341,7 +350,7 @@ def predict_hdb_price(from_date: str = None, to_date: str = None, plan_area=None
                       lease_commence_date_from=None, lease_commence_date_to=None) -> tuple[pd.DataFrame, str]:
     """
 def predict_hdb_price(from_date: str = None, to_date: str = None, plan_area=None, blk_no=None, street=None,flat_model=None, flat_type=None, storey_range=None,floor_area_sqm_from=None, floor_area_sqm_to=None,lease_commence_date_from=None, lease_commence_date_to=None) -> tuple[pd.DataFrame, str]:
-Predict HDB resale prices based on various property features. The function is used to predict a kind of hdb with certain features, it works well even only some of the parameters provided!!!
+Predict HDB resale prices using history data based on various property features. The function is used to predict a kind of hdb with certain features, it works well even only some of the parameters provided!!!
 The function returns both predicted prices dataFrame and a path of image of historical vs predicted prices.
 
 Args:

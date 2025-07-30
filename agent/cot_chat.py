@@ -42,16 +42,18 @@ def get_cot_chat_prompt(question):
         database = "\nThe database content: \n" + data_prompt + "\n"
 
     pre_prompt = """ 
-
 If you think you can try to answer with your own knowledge and function call is not necessary, answer directly.
 Else if you need to call multiple functions, please tell me how to solve the problem step by step with Natural language.
+Else if there are some similar functions and you think it is hard to decide, please ask the user to choose.
 Else if you need to call just one function, return a single word "one" without anything else.
+
 Remind:
 1. Do not mention code details.
 2. If needed, the chain of thought should be simple, short and clear.
 3. If used database, you should clarify the tables should be used!!!
 4. Do not go through steps in detail!!!
 5. Do not mention code detail, users are not specialists!!!
+6. Please ask the user to choose if there are some similar functions !!!
 
 You can use the following functions to solve the problem:
 """
@@ -69,6 +71,13 @@ one
 
 Example 3:
 I need you to clarify .....
+
+Example 4:
+We have some different functions to solve the problem: 
+1. function_name1: ...
+2. function_name2: ...
+you can choose one of the approaches and provide more information needed.
+
 """
 
     cot_prompt = "question:" + question + knowledge + database + pre_prompt + \
