@@ -68,7 +68,9 @@ def func():
     import pandas as pd
     import math
     # generate code to perform operations here
-     
+    
+    original_question = "show me the grades of a A01 class?"
+    
     yield "A01 class’s grades are as follows:"  # yield some information and explanation
     yield "use table: stu_info ,stu_grade"  # yield tables names before query database function
     df = query_database("The grades of a A01 class, use table stu_info ,stu_grade", "Name, Course_name, Grade")   
@@ -77,6 +79,8 @@ def func():
     if df == None:
         yield "The grades for this class were not found in the database"
     else:
+        data_description = explain_data("Analysis A01 class’s grades", df)
+        yield data_description
         yield "The grade histogram is as follows:"
         path = draw_graph("Draw a bar chart", df)
         yield path

@@ -3,6 +3,7 @@ import sqlalchemy
 
 from agent.utils.get_config import config_data
 from agent.utils.llm_access.LLM import get_llm
+from .copilot.data_explanation import get_llm_data_explanation_func
 
 DATABASE_URL = config_data['mysql']
 engine = sqlalchemy.create_engine(DATABASE_URL)
@@ -13,7 +14,6 @@ llm = get_llm()
 
 from .copilot.sql_code import query_database_func
 from .copilot.python_code import draw_graph_func
-
 
 
 def query_database(question: str, df_cols: str | list = None) -> pd.DataFrame:
@@ -75,5 +75,29 @@ def draw_graph(question: str, data: pd.DataFrame) -> str:
     return result
 
 
+def explain_data(question: str, data: pd.DataFrame) -> str:
+    """
+    explain_data(question: str, data: pd.DataFrame) -> str:
+    Explain the data provided in a pandas DataFrame based on a natural language question.
+    Returns a str of natural language data analysis.
 
+    Args:
+    - question (str): Natural language question.
+    - data (pd.DataFrame): A pandas DataFrame for analysis.
 
+    Returns:
+    - str: Explanation of data
+
+    Example:
+    ```python
+        data = pd.DataFrame({
+            'month': ['1', '2', '3', '4', '5'],
+            'sales': [200, 220, 250, 210, 230]
+        })
+        data_description = explain_data("how is the sales condition?", data)
+        # Output(str):
+        # "Based on the data..."
+    ```
+    """
+    ans = get_llm_data_explanation_func(question, data, llm)
+    return ans

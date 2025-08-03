@@ -158,6 +158,9 @@ def house_price_prediction_model(from_date: str, to_date: str, storey_range="", 
     # 2  2025-03      455000.0
     #   ...     ...
     yield img_path
+
+    data_description = explain_data(original_question + "please describe the given result of the data prediction", price_df)
+    yield data_description
     ```
     """
     # Generate monthly date range
@@ -396,6 +399,9 @@ yield price_df
     # 2  2025-03      455000.0
     #   ...     ...
 yield img_path
+
+data_description = explain_data(original_question + "please describe the given result of the data prediction", price_df)
+yield data_description
 ```
     """
     predict_df = llm_predict_hdb_func(engine=engine, llm=llm, from_date=from_date, to_date=to_date,
