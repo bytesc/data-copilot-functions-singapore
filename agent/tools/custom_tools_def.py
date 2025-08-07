@@ -303,15 +303,15 @@ def get_hdb_info(postcode: str, storey_range="",
     Args:
     - postcode (str): The postal code to search for (e.g., "123456")
     - storey_range (str): Original floor range (e.g., "04 to 06"). Default is empty string.
-    - flat_type (str): Type of flat (e.g., "4-room"). Default is empty string.
-    - flat_model (str): Model of flat (e.g., "Simplified"). Default is empty string.
+    - flat_type (str): Type of flat (e.g., "2 ROOM"). Default is empty string.
+    - flat_model (str): Model of flat (e.g., "Adjoined flat"). Default is empty string.
     - floor_area_sqm (float): Floor area in square meters. Default is 0.
     - lease_commence_date (str): Year lease commenced (e.g., "1985"). Default is empty string.
 
     Returns:
     - dict: A dictionary containing HDB information with the following keys:
         - planarea: Planning area of the HDB flat
-        - flat_type: Type of flat (e.g., 3-room, 4-room)
+        - flat_type: Type of flat (e.g., 1 ROOM, 4 ROOM)
         - flat_model: Model of the flat
         - street_name: Name of the street
         - floor_area_sqm: Floor area in square meters
@@ -324,13 +324,13 @@ def get_hdb_info(postcode: str, storey_range="",
 
     Example usage:
     ```python
-    hdb_info = get_hdb_info_by_postcode("139951", engine)
+    hdb_info = get_hdb_info_by_postcode("139951", flat_type="5 ROOM")
 
     yield hdb_info
     # Output (dict):
     # {
     #     'planarea': 'BUKIT MERAH',
-    #     'flat_type': '3 ROOM',
+    #     'flat_type': '5 ROOM',
     #     'flat_model': 'New Generation',
     #     'street_name': 'REDHILL CLOSE',
     #     'floor_area_sqm': 67.0,
