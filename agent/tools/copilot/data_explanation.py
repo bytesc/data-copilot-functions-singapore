@@ -29,7 +29,8 @@ Here is the dataframe:
 Remind:
 1. Please analyze and explain the trends, patterns, and cycles in the data based on the question.
 2. Please provide suggestions base on the question and data analysis.
-3. The Answer should not be too long, around 200 words is better.
+3. The Answer should be short and clear, around 150 words is better.
+4. Just describe the data, do not use any phrase to explain what you are doing.
 """
 
     final_prompt = pre_prompt + question + "\n" + data_prompt + end_prompt

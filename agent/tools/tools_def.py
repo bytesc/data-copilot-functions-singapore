@@ -78,7 +78,7 @@ def draw_graph(question: str, data: pd.DataFrame) -> str:
 def explain_data(question: str, data: pd.DataFrame) -> str:
     """
     explain_data(question: str, data: pd.DataFrame) -> str:
-    Explain the data provided in a pandas DataFrame based on a natural language question.
+    Explain the data provided in a pandas DataFrame based on a natural language question. This function must be used after important dataframe assigned.
     Returns a str of natural language data analysis.
 
     Args:
