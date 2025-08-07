@@ -285,12 +285,12 @@ def find_preschools_near_postcode(postcode: str, radius_km: float = 2.0) -> pd.D
     return pd.DataFrame(preschool_list)
 
 
-def get_hdb_info_with_postcode(postcode: str, storey_range="",
-                               flat_type="", flat_model="",
-                               floor_area_sqm=0, lease_commence_date="") -> dict:
+def get_hdb_info(postcode: str, storey_range="",
+                 flat_type="", flat_model="",
+                 floor_area_sqm=0, lease_commence_date="") -> dict:
     """
-    def get_hdb_info_with_postcode(postcode: str, storey_range="", flat_type="", flat_model="", floor_area_sqm=0, lease_commence_date="") -> dict:
-    Retrieve HDB information for a given postal code and various property features.
+    def get_hdb_info(postcode: str, storey_range="", flat_type="", flat_model="", floor_area_sqm=0, lease_commence_date="") -> dict:
+    Retrieve HDB information with various property features. Fill in as more
     Returns a dictionary containing comprehensive details about the HDB flat. return None if not found.
 
     The function first queries basic address information from the HDB database,
