@@ -290,7 +290,7 @@ def get_hdb_info(postcode: str, storey_range="",
                  floor_area_sqm=0, lease_commence_date="") -> dict:
     """
     def get_hdb_info(postcode: str, storey_range="", flat_type="", flat_model="", floor_area_sqm=0, lease_commence_date="") -> dict:
-    Retrieve HDB information with various property features. Fill in as more
+    Retrieve HDB information of a specific postcode with various property features. Please pass as many arguments as possible to the function.
     Returns a dictionary containing comprehensive details about the HDB flat. return None if not found.
 
     The function first queries basic address information from the HDB database,
