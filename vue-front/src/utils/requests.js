@@ -39,7 +39,7 @@ service.interceptors.response.use(res=>{
         //     console.log(res.data)
         //     return data
         // }
-        ElMessage.success("响应成功")
+        ElMessage.success("SUCCESS")
         return res.data
     },
     error => {

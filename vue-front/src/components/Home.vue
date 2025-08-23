@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref,reactive,computed, nextTick} from 'vue'
+import { ref,reactive,computed, nextTick, onMounted} from 'vue'
 import {Box, ChatDotRound, CloseBold, Coin, Files, House, Plus, Refrigerator, Tickets, Select} from "@element-plus/icons-vue";
 import MarkdownIt from 'markdown-it';
 
@@ -55,6 +55,29 @@ const scrollToBottom = () => {
   })
 }
 
+
+const hasShownWelcome = ref(false);
+
+// 显示开场白
+const showWelcomeMessage = () => {
+  if (!hasShownWelcome.value) {
+    chat.value.push({
+      role: 'agent',
+      content: "Welcome! I'm your Data Copilot for real estate and urban insights in Singapore. I'm here to help you explore property trends, school catchments, transportation networks, and more—with reliable, data-backed answers.\n\nWhether you're comparing home prices near stations, checking school rankings, or analyzing neighborhood demographics, just ask. I can generate maps, run predictions, and even guide you through complex queries step by step.\n\nWhat would you like to explore today?",
+      isMarkdown: true
+    });
+
+    hasShownWelcome.value = true;
+    scrollToBottom();
+  }
+};
+
+onMounted(() => {
+  showWelcomeMessage();
+});
+
+
+
 // 获取聊天数据的方法
 // const getChatDataFromAgent = async () => {
 //   try {
@@ -93,10 +116,14 @@ const scrollToBottom = () => {
 
 const getChatDataFromAgent = async () => {
   try {
+    const chatHistory = chat.value.map(log =>
+        `${log.role === 'user' ? 'User' : 'Agent'}: ${log.content}`
+    ).join('\n');
     let code = ""
     let ans = ""
     let response = await requestPack.post("/api/get-code/", {
-      question: Question.content+"\n"+Cot.content+"\n"+LastAns.content+"\n"
+      // question: Question.content+"\n"+Cot.content+"\n"+LastAns.content+"\n"
+      question: chatHistory
     });
     console.log(response)
 
@@ -220,6 +247,9 @@ const onClear = () => {
   chatLogs.value = [];
   chat.value = [];
   Cot.content = ""
+
+  hasShownWelcome.value = false
+  showWelcomeMessage()
 }
 
 const onSubmit = async () => {
