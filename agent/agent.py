@@ -19,8 +19,8 @@ from .utils.pd_to_walker import pd_to_walker
 from .tools.map.population_api import get_population_api_info
 from .tools.custom_tools_def import get_api_result
 
-IMPORTANT_MODULE = ["import pandas as pd", "import math", "import numpy as np", "import geopy"]
-
+IMPORTANT_MODULE = ["import math"]
+THIRD_MODULE = ["import pandas as pd", "import numpy as np", "import geopy"]
 
 def get_cot_code_prompt(question):
 
@@ -61,6 +61,8 @@ None or empty DataFrame return handling for each function call is extremely impo
     function_prompt = """ 
 Here is the functions you can import and use:
 """
+    module_prompt = "You can only use the third party function in "+str(THIRD_MODULE)+" !!!"
+
     example_code = """
 Here is an example: 
 ```python
@@ -89,7 +91,7 @@ def func():
     cot_prompt = "question:" + question + knowledge + database + pre_prompt + \
                  function_prompt + str(function_info) + \
                  api_prompt + str(api_info) + \
-                 example_code
+                 module_prompt + example_code
     return cot_prompt, rag_ans, function_import
 
 
@@ -110,6 +112,7 @@ def cot_agent(question, retries=2, print_rows=10):
                 # code = insert_yield_statements(code)
                 code = insert_lines_into_function(code, function_import)
                 code = insert_lines_into_function(code, IMPORTANT_MODULE)
+                code = insert_lines_into_function(code, THIRD_MODULE)
                 print(code)
                 if code is None:
                     continue
